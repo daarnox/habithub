@@ -1,5 +1,5 @@
 <template>
-    <Auth v-if="!userLoggedIn" @userLoggedIn="simulateLoggingIn"/>
+    <Auth v-if="userLoggedIn" @userLoggedIn="simulateLoggingIn"/>
     <div v-else>
       <Navigation/>
       <router-view/>    
@@ -72,5 +72,18 @@ export default {
   from {background: #1b3a4b }
   to {background: #312244}
 } */
+
+.view-container{
+  border-bottom-left-radius: 25px;
+  border-bottom-right-radius: 25px;
+  margin: auto;
+  height: 88vh;
+  width: 95vw;
+  background-color: #1e1e1e;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  padding: 30px;
+}
 
 </style>

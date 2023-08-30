@@ -25,7 +25,7 @@ export default {
             this.$emit('closeAddHabit');
         },
         postData(e) {
-            console.log(this.posts)
+            //console.log(this.posts)
             e.preventDefault();
             fetch("http://localhost:3000/habits", {
                 method: "POST", // or 'PUT'
@@ -37,7 +37,7 @@ export default {
 
             setTimeout(() => {
                 this.$emit('closeAddHabit');
-            }, 1500);
+            }, 700);
         }
     }
 }
@@ -69,6 +69,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 99;
 }
 
 .button {

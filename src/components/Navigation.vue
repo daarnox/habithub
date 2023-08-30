@@ -4,8 +4,8 @@
             <h1 class="title">//habitHub</h1>
             <ul class="navigation">
                 <li><router-link class="link" to="/">home.js</router-link></li>
-                <li><router-link class="link" :to="{ name:'habits'}">habits.js</router-link></li>
-                <li><router-link class="link" :to="{ name:'summary'}">summary.js</router-link></li>
+                <li><router-link class="link" :to="{ name: 'habits' }">habits.js</router-link></li>
+                <li><router-link class="link" :to="{ name: 'summary' }">summary.js</router-link></li>
             </ul>
         </nav>
     </header>
@@ -16,7 +16,6 @@ export default {};
 </script>
 
 <style scoped>
-
 header {
     display: flex;
     justify-content: center;
@@ -26,14 +25,13 @@ nav {
     width: 95%;
     background-color: #252525;
     padding-top: 15px;
-
     position: relative;
     display: flex;
     flex-direction: row;
     margin: 0 auto;
     /* border-image: linear-gradient(to right, #006466,#4d194d) 1; */
     border-bottom: 2px solid transparent;
-    border-image: linear-gradient(to right, #529955,#1e1e1e) 1;
+    border-image: linear-gradient(to right, #529955, #1e1e1e) 1;
 }
 
 .title {
@@ -55,14 +53,12 @@ nav {
     text-decoration: none;
 }
 
-.link{
+.link {
     font-weight: 500;
     color: #969696;
     list-style: none;
     text-decoration: none;
-
-    display:inline-block;
-    
+    display: inline-block;
     text-align: center;
     font-size: 20px;
     padding: 20px;
@@ -70,13 +66,11 @@ nav {
 }
 
 .link:hover {
-  /* color: lightblue; */
-  color: white;
+    color: white;
 }
 
 li a.router-link-exact-active {
     background-color: #1e1e1e;
     color: #fff;
-} 
-
+}
 </style>

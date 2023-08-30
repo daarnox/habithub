@@ -1,5 +1,5 @@
 <template>
-  <div class="summary">
+  <div class="view-container">
     <Calendar/>
     </div>
 </template>
@@ -16,19 +16,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-
-.summary {
-  border-bottom-left-radius: 25px;
-  border-bottom-right-radius: 25px;
-  margin: auto;
-  height: 88vh;
-  width: 95vw;
-  background-color: #1e1e1e;
-  box-sizing: border-box;
-  display: flex;
-  justify-content: center;
-  padding: 30px;
-}
-</style>
