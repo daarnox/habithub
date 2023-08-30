@@ -1,0 +1,29 @@
+{
+  "habits": [
+    {
+      "id": 1,
+      "name": "Coding",
+      "details": "for 5 hours",
+      "completed": false
+    },
+    {
+      "id": 2,
+      "name": "Push Ups",
+      "details": "50 a day",
+      "completed": false
+    },
+    {
+      "id": 3,
+      "name": "Reading",
+      "details": "for 30 minutes",
+      "completed": false
+    },
+    {
+      "id": 4,
+      "name": "Running",
+      "details": "at least 4km",
+      "completed": false
+    }
+  ],
+  "tasks": []
+}

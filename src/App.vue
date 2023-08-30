@@ -1,0 +1,76 @@
+<template>
+    <Auth v-if="!userLoggedIn" @userLoggedIn="simulateLoggingIn"/>
+    <div v-else>
+      <Navigation/>
+      <router-view/>    
+    </div> 
+</template>
+
+<script>
+
+import Navigation from '@/components/Navigation.vue'
+import Auth from '@/components/Auth.vue'
+//import {supabase} from './supabase'
+
+export default {
+  name: 'HomeView',
+  components: {
+    Navigation,
+    Auth
+  },
+    data(){
+    return {
+      user: {},
+      userLoggedIn: false,
+    }
+  },
+  created(){
+    this.handleSession();
+    //this.user = supabase.auth.getUser();
+    // supabase.auth.onAuthStateChange((_, session) => {
+    //   this.user = session.user;
+    // });
+  },
+  methods: {
+      async handleSession() {
+        // const {data: { session },} = await supabase.auth.getSession()
+        // // const session = supabase.auth.session()
+        // if (session != null) {
+        //   this.user = session.user;
+        // }
+      },
+      simulateLoggingIn(){
+        this.userLoggedIn = true;
+      }
+    },
+
+}
+</script>
+
+
+<style>
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;  /* include the padding and border in an element's total width */
+}
+
+#app {
+    /* -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; */
+  font-family: Consolas, Avenir, Helvetica, Arial, sans-serif;
+  text-align: center;
+  color: #fff;
+  min-height: 100vh;
+  position: relative;
+  background: linear-gradient(45deg, #212f45 20%, #1b3a4b 20% 40%, #212f45 40% 60%, #272640 60% 80%, #312244 80%); 
+  /* animation: mymove 5s infinite alternate; */  
+}
+
+/* @keyframes mymove {
+  from {background: #1b3a4b }
+  to {background: #312244}
+} */
+
+</style>
