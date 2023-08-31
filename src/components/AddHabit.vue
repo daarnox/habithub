@@ -1,21 +1,23 @@
 <template>
     <div class="backdrop" @click.self="closeAddHabit">
-        <form class="form" @submit="postData" method="post">
+        <form class="form" @submit.prevent="postData" method="post">
             <h1>add a habit</h1>
             <input class="text-input" type="text" name="name" placeholder="name" v-model="posts.name"><br><br>
-            <input class="text-input" type="text" name="details" placeholder="details" v-model="posts.details"><br><br>
+            <input class="text-input" type="text" name="details" placeholder="details" v-model="posts.description"><br><br>
             <input type="submit" class="button" :value="'Add Habit'" />
         </form>
     </div>
 </template>
 
 <script>
+import { supabase } from '@/supabase';
+
 export default {
     data() {
         return {
             posts: {
                 name: null,
-                details: null,
+                description: null,
                 completed: false
             }
         }
@@ -24,16 +26,23 @@ export default {
         closeAddHabit() {
             this.$emit('closeAddHabit');
         },
-        postData(e) {
-            //console.log(this.posts)
-            e.preventDefault();
-            fetch("http://localhost:3000/habits", {
-                method: "POST", // or 'PUT'
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(this.posts),
-            }).then(res => res.json()).then(data => console.log(data)).catch(err => console.log(err));
+        async postData(e) {
+
+            // fetch("http://localhost:3000/habits", {
+            //     method: "POST", // or 'PUT'
+            //     headers: {
+            //         "Content-Type": "application/json",
+            //     },
+            //     body: JSON.stringify(this.posts),
+            // }).then(res => res.json()).then(data => console.log(data)).catch(err => console.log(err));
+
+            //const post = JSON.stringify(this.posts);
+            const { error } = await supabase
+                .from('habits')
+                .insert({name: this.posts.name, description: this.posts.description, completed: this.posts.completed })//.catch(err => console.log(err));
+
+            //TODO: try catch block?????
+            if (error != null) console.log(error);
 
             setTimeout(() => {
                 this.$emit('closeAddHabit');
@@ -97,8 +106,8 @@ export default {
 }
 
 .button:hover {
-  color: #fff;
-  background-color: #529955; 
+    color: #fff;
+    background-color: #529955;
 }
 
 .text-input {
@@ -111,7 +120,7 @@ export default {
     border: 1px solid transparent;
     letter-spacing: 2px;
     min-width: 160px;
-    text-transform: uppercase;
+    /* text-transform: uppercase; */
     white-space: normal;
     font-weight: 700;
     text-align: center;

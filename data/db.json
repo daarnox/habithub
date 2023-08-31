@@ -16,13 +16,19 @@
       "id": 3,
       "name": "Reading",
       "details": "for 30 minutes",
-      "completed": false
+      "completed": true
     },
     {
       "id": 4,
       "name": "Running",
       "details": "at least 4km",
-      "completed": false
+      "completed": true
+    },
+    {
+      "name": "simea",
+      "details": "test",
+      "completed": false,
+      "id": 5
     }
   ],
   "tasks": []

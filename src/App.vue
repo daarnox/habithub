@@ -1,5 +1,6 @@
 <template>
-    <Auth v-if="userLoggedIn" @userLoggedIn="simulateLoggingIn"/>
+    <!-- <Auth v-if="!userLoggedIn" @userLoggedIn="simulateLoggingIn"/> -->
+    <Authentication v-if="!userLoggedIn"/>
     <div v-else>
       <Navigation/>
       <router-view/>    
@@ -9,39 +10,32 @@
 <script>
 
 import Navigation from '@/components/Navigation.vue'
-import Auth from '@/components/Auth.vue'
-//import {supabase} from './supabase'
+import Authentication from '@/components/authentication/Authentication.vue'
+import {supabase} from './supabase'
+import {store} from '@/store/store'
 
 export default {
   name: 'HomeView',
   components: {
     Navigation,
-    Auth
+    Authentication
   },
     data(){
     return {
-      user: {},
       userLoggedIn: false,
     }
   },
   created(){
-    this.handleSession();
-    //this.user = supabase.auth.getUser();
-    // supabase.auth.onAuthStateChange((_, session) => {
-    //   this.user = session.user;
-    // });
+    const user = supabase.auth.getUser()
+    supabase.auth.onAuthStateChange((_, session) => {
+      store.setUser(session);
+      this.userLoggedIn = (store.user != null);
+    });
   },
   methods: {
-      async handleSession() {
-        // const {data: { session },} = await supabase.auth.getSession()
-        // // const session = supabase.auth.session()
-        // if (session != null) {
-        //   this.user = session.user;
-        // }
-      },
-      simulateLoggingIn(){
-        this.userLoggedIn = true;
-      }
+      // simulateLoggingIn(){
+      //   this.userLoggedIn = true;
+      // }
     },
 
 }

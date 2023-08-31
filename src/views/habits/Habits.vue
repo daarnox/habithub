@@ -22,7 +22,8 @@
           <h1 style="margin: 10px; color:#529955">//todo:</h1>
           <div class="task-list">
             <ul>
-              <TaskItem v-for="(task, index) in uncompletedTasks" :key="task.id" v-bind:task="task" @remove="removeTask(task.id)" @complete="completeTask(task)"/>
+              <TaskItem v-for="(task, index) in uncompletedTasks" :key="task.id" v-bind:task="task"
+                @remove="removeTask(task.id)" @complete="completeTask(task)" />
             </ul>
           </div>
         </div>
@@ -31,7 +32,8 @@
           <h1 style="margin: 10px; color:#529955">//done:</h1>
           <div class="task-list">
             <ul>
-              <TaskItem v-for="(task, index) in completedTasks" :key="task.id" v-bind:task="task" @remove="removeTask(task.id)" @complete="completeTask(task)"/>
+              <TaskItem v-for="(task, index) in completedTasks" :key="task.id" v-bind:task="task"
+                @remove="removeTask(task.id)" @complete="completeTask(task)" />
             </ul>
           </div>
         </div>
@@ -49,10 +51,12 @@ import TaskItem from '@/components/TaskItem.vue';
 
 import AddHabit from '@/components/AddHabit.vue';
 
+import { supabase } from '@/supabase';
+
 export default {
   data() {
     return {
-      habits:[],
+      habits: [],
       // habits: [
       //   { id: 1, name: "Coding", details: "for 5 hours", completed: false },
       //   { id: 2, name: "Push Ups", details: "50 a day", completed: false },
@@ -63,10 +67,11 @@ export default {
     }
   },
   mounted() {
-    fetch('http://localhost:3000/habits')
-      .then(res => res.json())
-      .then(data => this.habits = data)
-      .catch(err => console.log(err.message));
+    // fetch('http://localhost:3000/habits')
+    //   .then(res => res.json())
+    //   .then(data => this.habits = data)
+    //   .catch(err => console.log(err.message));
+    this.fetchData();
   },
   components: {
     Icon,
@@ -74,37 +79,39 @@ export default {
     AddHabit
   },
   methods: {
+    async fetchData(){
+      //TODO: try catch block?????
+      const { data, error } = await supabase.from('habits').select()
+      if (error != null) console.log(error.message)
+      else this.habits = data;
+    },
     completeTask(task) {
       task.completed = !task.completed;
     },
     toggleAddHabitMenu() {
       this.showAddHabitMenu = !this.showAddHabitMenu;
     },
-    removeTask(id){
-      this.habits = this.habits.filter( h => h.id != id);
+    async removeTask(id) {
+       this.habits = this.habits.filter(h => h.id != id);
+      // const url = "http://localhost:3000/habits/" + id;
+      // fetch(url, {
+      //   method: "DELETE",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      // }).then(res => res.json()).then(data => console.log(data)).catch(err => console.log(err));
 
-      const url = "http://localhost:3000/habits/" + id;
-      fetch(url, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }).then(res => res.json()).then(data => console.log(data)).catch(err => console.log(err));
+      // TODO: try catch block?????
+      const { error } = await supabase.from('habits').delete().eq('id', id);
+      if (error != null) console.log(error.message);
     }
 
   },
   computed: {
-    // className() {
-    //   let classes = ['task'];
-    //   if(this.task.completed) {
-    //     classes.push('task-completed');
-    //   }
-    //   return classes.join(' ');
-    // },
-    completedTasks(){
+    completedTasks() {
       return this.habits.filter(h => h.completed);
     },
-    uncompletedTasks(){
+    uncompletedTasks() {
       return this.habits.filter(h => !h.completed);
     }
   }

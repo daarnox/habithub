@@ -1,12 +1,12 @@
 <template>
   <li>
-    <button @click.self="completeTask()" :class="className">
+    <button @click.self="completeTask()" :class="{'task-completed' : isCompleted}">
       <!-- <span style="color:#dcdcaa">{{task.name}}</span>
         <span style="color:#c586c0">(</span>
         <span style="color:#9cdcfe">{{task.details}}</span>
         <span style="color:#c586c0">)</span> -->
-      <span v-if="task.completed" style="text-decoration:none;">//</span>
-      {{ task.name }} ({{ task.details }})
+      <span v-if="isCompleted" style="text-decoration:none;">//</span>
+      {{ task.name }} ({{ task.description }})
     </button>
     <Icon icon="iconamoon:trash-duotone" @click="$emit('remove')" />
   </li>
@@ -14,26 +14,35 @@
   
 <script>
 import { Icon } from '@iconify/vue';
+import { supabase } from '@/supabase';
 
 export default {
   name: "TaskItem",
   props: ["task"],
   computed: {
-    className() {
-      return this.task.completed ? 'task-completed' : ''
-    }
+    isCompleted() {
+      return this.task.completed;
+    },
   },
   methods: {
-    completeTask() {
-      //this.task.completed = true;
-      const url = "http://localhost:3000/habits/" + this.task.id;
-      fetch(url, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...this.task, completed: !this.task.completed }),
-      }).then(res => res.json()).then(data => console.log(data)).catch(err => console.log(err));
+    async completeTask() {
+      // const url = "http://localhost:3000/habits/" + this.task.id;
+      // fetch(url, {
+      //   method: "PUT",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({ ...this.task, completed: !this.task.completed }),
+      // }).then(res => res.json()).then(data => console.log(data)).catch(err => console.log(err));
+
+      const { error } = await supabase
+      .from('habits')
+      .update({ completed: !this.task.completed })
+      .eq('id', this.task.id)
+
+      // TODO try catch block??
+      if (error != null) console.log(error.message);
+
       this.$emit('complete');
     },
   },
