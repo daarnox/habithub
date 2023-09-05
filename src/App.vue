@@ -23,12 +23,14 @@ export default {
     data(){
     return {
       userLoggedIn: false,
+      store,
     }
   },
   created(){
     const user = supabase.auth.getUser()
     supabase.auth.onAuthStateChange((_, session) => {
       store.setUser(session);
+      //console.log(store.user)
       this.userLoggedIn = (store.user != null);
     });
   },

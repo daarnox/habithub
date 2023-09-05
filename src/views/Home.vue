@@ -5,7 +5,7 @@
         <div style="flex: 1; background-color: none;">
         </div>
         <div style="background-color: none;">
-          <h1>home page:</h1>
+          <h1>Hello {{userName}}, welcome to home page:</h1>
         </div>
         <div style="flex: 1;  background-color: none;">
         </div>
@@ -24,18 +24,33 @@
 </template>
 
 <script>
-// @ is an alias to /src
-// import HelloWorld from '@/components/HelloWorld.vue'
+import { supabase } from '@/supabase';
+import { store } from '@/store/store'
+import { computed } from 'vue';
 
 export default {
   name: 'HomeView',
   components: {
+  },
+  data() {
+    return {
+      store,
+    }
+  },
+  computed: {
+    userName() {
+      if (store.user != null) {
+        const fullEmail = store.user.email;
+        const parts = fullEmail.split("@");
+        const userName= parts[0];
+        return userName;
+      }
+    }
   }
 }
 </script>
 
 <style scoped>
-
 .container {
   width: 100%;
   height: 100%;

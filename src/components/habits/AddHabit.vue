@@ -2,24 +2,30 @@
     <div class="backdrop" @click.self="closeAddHabit">
         <form class="form" @submit.prevent="postData" method="post">
             <h1>add a habit</h1>
-            <input class="text-input" type="text" name="name" placeholder="name" v-model="posts.name"><br><br>
-            <input class="text-input" type="text" name="details" placeholder="details" v-model="posts.description"><br><br>
+            <input class="text-input" type="text" name="name" placeholder="name" v-model="task.name"><br><br>
+            <input class="text-input" type="text" name="details" placeholder="details" v-model="task.description"><br><br>
+            <div>
+                <input type="checkbox" id="isRegular" name="isRegular" value="false" v-model="task.is_regular">
+                <label for="isRegular"> Save as regular task</label>                
+            </div>
             <input type="submit" class="button" :value="'Add Habit'" />
         </form>
     </div>
 </template>
 
 <script>
-import { supabase } from '@/supabase';
+import { store } from '@/store/store'
 
 export default {
     data() {
         return {
-            posts: {
+            task: {
+                id: null,
                 name: null,
                 description: null,
-                completed: false
-            }
+                completed: false,
+                is_regular: false
+            },
         }
     },
     methods: {
@@ -27,26 +33,8 @@ export default {
             this.$emit('closeAddHabit');
         },
         async postData(e) {
-
-            // fetch("http://localhost:3000/habits", {
-            //     method: "POST", // or 'PUT'
-            //     headers: {
-            //         "Content-Type": "application/json",
-            //     },
-            //     body: JSON.stringify(this.posts),
-            // }).then(res => res.json()).then(data => console.log(data)).catch(err => console.log(err));
-
-            //const post = JSON.stringify(this.posts);
-            const { error } = await supabase
-                .from('habits')
-                .insert({name: this.posts.name, description: this.posts.description, completed: this.posts.completed })//.catch(err => console.log(err));
-
-            //TODO: try catch block?????
-            if (error != null) console.log(error);
-
-            setTimeout(() => {
-                this.$emit('closeAddHabit');
-            }, 700);
+            await store.addTask(this.task);
+            this.$emit('closeAddHabit');
         }
     }
 }

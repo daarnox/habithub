@@ -1,6 +1,6 @@
 <template>
   <AddHabit v-if="showAddHabitMenu" @closeAddHabit="toggleAddHabitMenu" />
-
+  <!-- @habitAdded="handleHabitAdded"/> -->
   <div class="view-container">
     <div class="container">
       <div class="top-part" style="display:flex; padding:50px;">
@@ -22,8 +22,7 @@
           <h1 style="margin: 10px; color:#529955">//todo:</h1>
           <div class="task-list">
             <ul>
-              <TaskItem v-for="(task, index) in uncompletedTasks" :key="task.id" v-bind:task="task"
-                @remove="removeTask(task.id)" @complete="completeTask(task)" />
+              <TaskItem v-for="(task, index) in uncompletedTasks" :key="task.id" v-bind:task="task"/>
             </ul>
           </div>
         </div>
@@ -32,8 +31,7 @@
           <h1 style="margin: 10px; color:#529955">//done:</h1>
           <div class="task-list">
             <ul>
-              <TaskItem v-for="(task, index) in completedTasks" :key="task.id" v-bind:task="task"
-                @remove="removeTask(task.id)" @complete="completeTask(task)" />
+              <TaskItem v-for="(task, index) in completedTasks" :key="task.id" v-bind:task="task"/>
             </ul>
           </div>
         </div>
@@ -47,11 +45,11 @@
 <script>
 import { Icon } from '@iconify/vue'
 
-import TaskItem from '@/components/TaskItem.vue';
+import TaskItem from '@/components/habits/TaskItem.vue';
 
-import AddHabit from '@/components/AddHabit.vue';
+import AddHabit from '@/components/habits/AddHabit.vue';
 
-import { supabase } from '@/supabase';
+import { store } from '@/store/store';
 
 export default {
   data() {
@@ -71,7 +69,7 @@ export default {
     //   .then(res => res.json())
     //   .then(data => this.habits = data)
     //   .catch(err => console.log(err.message));
-    this.fetchData();
+    //this.fetchData();
   },
   components: {
     Icon,
@@ -79,40 +77,21 @@ export default {
     AddHabit
   },
   methods: {
-    async fetchData(){
-      //TODO: try catch block?????
-      const { data, error } = await supabase.from('habits').select()
-      if (error != null) console.log(error.message)
-      else this.habits = data;
-    },
-    completeTask(task) {
-      task.completed = !task.completed;
-    },
+
     toggleAddHabitMenu() {
       this.showAddHabitMenu = !this.showAddHabitMenu;
-    },
-    async removeTask(id) {
-       this.habits = this.habits.filter(h => h.id != id);
-      // const url = "http://localhost:3000/habits/" + id;
-      // fetch(url, {
-      //   method: "DELETE",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      // }).then(res => res.json()).then(data => console.log(data)).catch(err => console.log(err));
-
-      // TODO: try catch block?????
-      const { error } = await supabase.from('habits').delete().eq('id', id);
-      if (error != null) console.log(error.message);
     }
 
   },
   computed: {
+    allTasks() {
+      return store.tasks;
+    },
     completedTasks() {
-      return this.habits.filter(h => h.completed);
+      return this.allTasks.filter(h => h.completed);
     },
     uncompletedTasks() {
-      return this.habits.filter(h => !h.completed);
+      return this.allTasks.filter(h => !h.completed);
     }
   }
 }

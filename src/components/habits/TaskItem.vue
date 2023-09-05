@@ -1,6 +1,6 @@
 <template>
-  <li>
-    <button @click.self="completeTask()" :class="{'task-completed' : isCompleted}">
+  <li :class="{ 'toggle-completion': isBeingToggled }">
+    <button @click.self="toggleTaskCompletion()" :class="{ 'task-completed': isCompleted }">
       <!-- <span style="color:#dcdcaa">{{task.name}}</span>
         <span style="color:#c586c0">(</span>
         <span style="color:#9cdcfe">{{task.details}}</span>
@@ -8,16 +8,23 @@
       <span v-if="isCompleted" style="text-decoration:none;">//</span>
       {{ task.name }} ({{ task.description }})
     </button>
-    <Icon icon="iconamoon:trash-duotone" @click="$emit('remove')" />
+    <Icon v-if="!isBeingToggled" icon="iconamoon:trash-duotone" @click="removeTask()" />
+    <Icon v-if="isBeingToggled" icon="icon-park-outline:back-one" @click="cancelToggle()" />
   </li>
 </template>
   
 <script>
 import { Icon } from '@iconify/vue';
-import { supabase } from '@/supabase';
+import { store } from '@/store/store';
 
 export default {
   name: "TaskItem",
+  data() {
+    return {
+      isBeingToggled: false,
+    }
+
+  },
   props: ["task"],
   computed: {
     isCompleted() {
@@ -25,26 +32,19 @@ export default {
     },
   },
   methods: {
-    async completeTask() {
-      // const url = "http://localhost:3000/habits/" + this.task.id;
-      // fetch(url, {
-      //   method: "PUT",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({ ...this.task, completed: !this.task.completed }),
-      // }).then(res => res.json()).then(data => console.log(data)).catch(err => console.log(err));
+    async toggleTaskCompletion() {
+      this.isBeingToggled = true;
+      setTimeout(() => {
+        if(this.isBeingToggled) store.toggleTaskCompletion(this.task);
+      }, 2000);
 
-      const { error } = await supabase
-      .from('habits')
-      .update({ completed: !this.task.completed })
-      .eq('id', this.task.id)
-
-      // TODO try catch block??
-      if (error != null) console.log(error.message);
-
-      this.$emit('complete');
     },
+    cancelToggle(){
+      this.isBeingToggled = false;
+    },
+    async removeTask() {
+      store.removeTask(this.task);
+    }
   },
   components: {
     Icon
@@ -88,11 +88,11 @@ li::before {
   width: 0%;
   height: 100%;
   background-color: #2b2b2b;
-  transition: all 1s;
+  transition: all 2s;
   z-index: -1;
 }
 
-li:hover::before {
+.toggle-completion::before {
   width: 100%;
 }
 
