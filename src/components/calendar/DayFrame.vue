@@ -1,6 +1,7 @@
 <template>
     <div :class="borderClass">
         <p style="color: #9cdcfe">{{formattedDate}}</p>
+        <p style="color: #9cdcfe"> {{date.percentage}}</p>
     </div>
 </template>
   
@@ -16,15 +17,15 @@
         },
         computed: {
             formattedDate() {
-                const parsedDate = dayjs(this.date, 'YYYY-MM-DD');
+                const parsedDate = dayjs(this.date.date, 'YYYY-MM-DD');
                 return parsedDate.format('DD/MM');
             },
             borderClass(){
                 // dayjs.format('YYYY-MM-DD');
-                if (dayjs().isSame(dayjs(this.date, 'YYYY-MM-DD'),'day')){
+                if (dayjs().isSame(dayjs(this.date.date, 'YYYY-MM-DD'),'day')){
                     return 'today-border day-frame'
                 }
-                else if(dayjs().isAfter(dayjs(this.date, 'YYYY-MM-DD'),'day')){
+                else if(dayjs().isAfter(dayjs(this.date.date, 'YYYY-MM-DD'),'day')){
                     return 'past-border day-frame'
                 }
                 else return 'default-border day-frame'

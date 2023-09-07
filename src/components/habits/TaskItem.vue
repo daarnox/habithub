@@ -31,7 +31,7 @@ export default {
     if (this.task.executions.length === 0 && this.task.is_regular) {
       const { data, error2 } = await supabase
         .from('executions')
-        .insert({ task_id: this.task.id, is_done: false }).select();
+        .insert({ task_id: this.task.id, is_done: false, task_date: store.currentDisplayDate }).select();
       if (error2 != null) console.log(error2.message);
       // TODO: is this task the same object as in store.tasks?
       this.task.executions.push(data);
