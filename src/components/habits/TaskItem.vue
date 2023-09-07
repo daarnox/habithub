@@ -16,6 +16,7 @@
 <script>
 import { Icon } from '@iconify/vue';
 import { store } from '@/store/store';
+import { supabase } from '@/supabase';
 
 export default {
   name: "TaskItem",
@@ -26,20 +27,32 @@ export default {
 
   },
   props: ["task"],
+  async mounted() {
+    if (this.task.executions.length === 0 && this.task.is_regular) {
+      const { data, error2 } = await supabase
+        .from('executions')
+        .insert({ task_id: this.task.id, is_done: false }).select();
+      if (error2 != null) console.log(error2.message);
+      // TODO: is this task the same object as in store.tasks?
+      this.task.executions.push(data);
+    }
+
+  },
   computed: {
     isCompleted() {
-      return this.task.completed;
+      if (this.task.executions.length === 0) return false;
+      else return this.task.executions[0].is_done;
     },
   },
   methods: {
     async toggleTaskCompletion() {
       this.isBeingToggled = true;
       setTimeout(() => {
-        if(this.isBeingToggled) store.toggleTaskCompletion(this.task);
+        if (this.isBeingToggled) store.toggleTaskCompletion(this.task);
       }, 2000);
 
     },
-    cancelToggle(){
+    cancelToggle() {
       this.isBeingToggled = false;
     },
     async removeTask() {

@@ -85,13 +85,22 @@ export default {
   },
   computed: {
     allTasks() {
-      return store.tasks;
+      // return store.tasks;
+      return store.currentDisplayDateTasks;
     },
     completedTasks() {
-      return this.allTasks.filter(h => h.completed);
+      return this.allTasks.filter( (task) => {
+        if (task.executions.length != 0)
+          return task.executions[0].is_done;
+        else return false;
+      });
     },
     uncompletedTasks() {
-      return this.allTasks.filter(h => !h.completed);
+      return this.allTasks.filter( (task) => {
+        if (task.executions.length != 0)
+          return !task.executions[0].is_done;
+        else return true;
+      });
     }
   }
 }
