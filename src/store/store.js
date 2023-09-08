@@ -6,12 +6,19 @@ import utc from 'dayjs/plugin/utc';
 
 export const store = reactive({
 
+  //user session
   user: null,
+  //all tasks with all executions
   tasks: [],
+  //todays date
   todaysDate: null,
+  //used in task list and callendar to retrieve proper data
   currentDisplayDate: null,
+  //list of filtered tasks accoring to currentDisplayDate
   currentDisplayDateTasks: [],
+  //list of days and its data used in callendar
   callendarDates: [],
+  //used to check if data is ready to be used
   callendarDatesAreSet: false,
 
   setUser(session) {
@@ -38,7 +45,7 @@ export const store = reactive({
       description,
       completed,
       is_regular,
-      executions(id, created_at, is_done, task_date)
+      executions(id, created_at, is_done, task_date, task_id)
       `).eq('user_id', this.user.id)
       .filter('executions.task_date', 'gte', previousWeekMonday)
       .filter('executions.task_date', 'lte', nextWeekSunday);
@@ -84,6 +91,7 @@ export const store = reactive({
     this.setCurrentDisplayDateTasks();
   },
   setCallendarDates() {
+    //TODO: this code can propably be way shorter
     if (this.currentDisplayDate == null || this.tasks.length === 0) return;
     this.callendarDatesAreSet = false;
     //empty dictionary filled with proper dates as keys
@@ -93,7 +101,7 @@ export const store = reactive({
     for (let i = 0; i < 21; i++) { // 21 days for 3 weeks
       const date = firstDay.add(i, 'day').format('YYYY-MM-DD');
       //this.callendarDates[date.format('YYYY-MM-DD')] = {}; // Set the date as a key with an empty object as the value
-      this.callendarDates.push({date: date, executions: [], percentage: 0});
+      this.callendarDates.push({ date: date, executions: [], percentage: 0 });
     }
     //temporary dictionary
     const executionsByDate = {};
@@ -110,7 +118,6 @@ export const store = reactive({
       const dayExecutions = executionsByDate[date];
       const dayExecutionsAmount = dayExecutions.length;
       const doneDayExecutionsAmount = dayExecutions.filter(execution => execution.is_done).length;
-
       const percentage = dayExecutionsAmount > 0 ? (doneDayExecutionsAmount * 1.0 / dayExecutionsAmount) * 100 | 0 : 0;
 
       const indexToUpdate = this.callendarDates.findIndex(item => item.date === date);
@@ -123,16 +130,10 @@ export const store = reactive({
       } else {
         console.log('No object found with the specified date.');
       }
-      this.callendarDatesAreSet = true;
-      console.log(this.callendarDates)
 
-      //const currDateFormatted = dayjs(date).format('YYYY-MM-DD');
-      // this.callendarDates[currDateFormatted] = {
-      //   date: currDateFormatted,
-      //   executions: dayExecutions,
-      //   percentage: percentage,
-      // };
     }
+    this.callendarDatesAreSet = true;
+    // console.log(this.callendarDates)
   },
   async addTask(task) {
     //TODO: try catch block?????
@@ -156,6 +157,8 @@ export const store = reactive({
     //retrieve insterted task in order to get its database id
     this.tasks.push({ ...data[0], executions: execution });
     this.currentDisplayDateTasks.push({ ...data[0], executions: execution });
+    //update callendar singleTasks list
+    this.setCallendarDates();
 
 
   },
@@ -175,6 +178,8 @@ export const store = reactive({
     if (error2 != null) console.log(error2.message);
     //update local list
     task.executions[0].is_done = !task.executions[0].is_done;
+    //update callendar percentage
+    this.setCallendarDates();
   },
   async removeTask(task) {
     this.tasks = this.tasks.filter(t => t.id != task.id);
@@ -182,6 +187,8 @@ export const store = reactive({
     // TODO: try catch block?????
     const { error } = await supabase.from('tasks').delete().eq('id', task.id);
     if (error != null) console.log(error.message);
+    //update callendar singleTasks list
+    this.setCallendarDates();
   },
 
 

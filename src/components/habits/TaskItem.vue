@@ -46,11 +46,14 @@ export default {
   },
   methods: {
     async toggleTaskCompletion() {
-      this.isBeingToggled = true;
-      setTimeout(() => {
-        if (this.isBeingToggled) store.toggleTaskCompletion(this.task);
-      }, 2000);
-
+      if(this.isBeingToggled) this.cancelToggle();
+      else {
+        //TODO: delete cancelToggle and place all code here?
+        this.isBeingToggled = true;
+        setTimeout(() => {
+          if (this.isBeingToggled) store.toggleTaskCompletion(this.task);
+        }, 2000);        
+      }
     },
     cancelToggle() {
       this.isBeingToggled = false;
