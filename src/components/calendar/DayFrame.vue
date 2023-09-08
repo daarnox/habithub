@@ -41,7 +41,7 @@ export default {
         },
         singleTasksList() {
             //TODO: terrible code, this part shouldnt exist, change it all
-            console.log(this.date)
+            //console.log(this.date)
             let result = [];
             for (const exec of this.date.executions) {
                 // console.log(exec)

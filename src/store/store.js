@@ -159,6 +159,8 @@ export const store = reactive({
     this.currentDisplayDateTasks.push({ ...data[0], executions: execution });
     //update callendar singleTasks list
     this.setCallendarDates();
+    //is this one necessary?
+    this.retreiveData();
 
 
   },
