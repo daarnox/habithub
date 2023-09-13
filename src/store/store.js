@@ -70,20 +70,21 @@ export const store = reactive({
       if (currentExecution.length > 1) console.log("Multiple Executions for one Day"); //TODO: Better error handling
 
       //regular tasks need to have everyday executions
-      if (task.is_regular && currentExecution.length === 0) {
+      // if (task.is_regular && currentExecution.length === 0) {
 
-        // MOVE THIS PART OF CODE TO TASK ITEM
+      //   // MOVE THIS PART OF CODE TO TASK ITEM
 
-        // //create Execution {is_done:false} 
-        // const { data, error2 } = await supabase
-        //   .from('executions')
-        //   .insert({ task_id: task.id, is_done: false }).select();
-        // if (error2 != null) console.log(error2.message);
-        // task.executions.push(data);
-        // currentExecution.push(data);
-      }
+      //   // //create Execution {is_done:false} 
+      //   // const { data, error2 } = await supabase
+      //   //   .from('executions')
+      //   //   .insert({ task_id: task.id, is_done: false }).select();
+      //   // if (error2 != null) console.log(error2.message);
+      //   // task.executions.push(data);
+      //   // currentExecution.push(data);
+      // }
       //return all regular tasks and other ones with hasDate
-      if (task.is_regular || currentExecution.length === 1) this.currentDisplayDateTasks.push({ ...task, executions: currentExecution });
+
+      if (task.is_regular || currentExecution.length === 1) this.currentDisplayDateTasks.push({ ...task, executions: currentExecution[0] });
     }
   },
   changeCurrentDisplayDate(offset) {
@@ -148,19 +149,19 @@ export const store = reactive({
       const { data, error } = await supabase
         .from('executions')
         .insert({ task_id: new_task.id, is_done: false, task_date: this.currentDisplayDate }).select();
-      console.log(data[0]);
+      //console.log(data[0]);
       if (error != null) console.log(error.message);
       else execution.push(data[0]);
-      console.log(error)
-      console.log(execution);
+      //console.log(error)
+      //console.log(execution);
     }
     //retrieve insterted task in order to get its database id
     this.tasks.push({ ...data[0], executions: execution });
-    this.currentDisplayDateTasks.push({ ...data[0], executions: execution });
+    this.currentDisplayDateTasks.push({ ...data[0], executions: execution[0] });
     //update callendar singleTasks list
     this.setCallendarDates();
     //is this one necessary?
-    this.retreiveData();
+    //this.retreiveData();
 
 
   },
@@ -173,13 +174,24 @@ export const store = reactive({
     if (error != null) console.log(error.message);
     //create new execution
     //TODO: force unique date
-    const { data, error2 } = await supabase
-      .from('executions')
-      .update({ is_done: !task.executions[0].is_done, task_date: this.currentDisplayDate })
-      .eq('id', task.executions[0].id)
-    if (error2 != null) console.log(error2.message);
+    //console.log(task.executions);
+    if (task.executions != null) {
+      const { data, error2 } = await supabase
+        .from('executions')
+        .update({ is_done: !task.executions.is_done, task_date: this.currentDisplayDate })
+        .eq('id', task.executions.id)
+      if (error2 != null) console.log(error2.message);
+      task.executions.is_done = !task.executions.is_done;    
+    } else {
+      const { data, error2 } = await supabase
+        .from('executions')
+        .insert({ task_id: task.id, is_done: true, task_date: this.currentDisplayDate }).select();
+      if (error2 != null) console.log(error2.message);
+      task.executions = data[0];
+    }
+
     //update local list
-    task.executions[0].is_done = !task.executions[0].is_done;
+   
     //update callendar percentage
     this.setCallendarDates();
   },

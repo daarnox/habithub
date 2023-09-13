@@ -1,9 +1,12 @@
 <template>
     <div :class="borderClass" class="flex-display">
         <p style="color: #9cdcfe">{{ formattedDate }}</p>
-        <p v-for="st in singleTasksList">{{ st }}</p>
+        <div style="overflow:hidden;">
+            <p v-for="st in singleTasksList" style="text-overflow: ellipsis; white-space: nowrap;">{{ st }}</p>
+        </div>
+
         <div :class="scoreClass">
-            <p>{{ date.percentage }}</p>
+            <p v-if="dateType != 'future' ">{{ date.percentage }}%</p>
         </div>
     </div>
 </template>
@@ -24,17 +27,27 @@ export default {
             const parsedDate = dayjs(this.date.date, 'YYYY-MM-DD');
             return parsedDate.format('DD/MM');
         },
-        borderClass() {
-            // dayjs.format('YYYY-MM-DD');
+        dateType(){
             if (dayjs().isSame(dayjs(this.date.date, 'YYYY-MM-DD'), 'day')) {
-                return 'today-border day-frame'
+                return 'today'
             }
             else if (dayjs().isAfter(dayjs(this.date.date, 'YYYY-MM-DD'), 'day')) {
+                return 'past'
+            }
+            else return 'future'
+        },
+        borderClass() {
+            // dayjs.format('YYYY-MM-DD');
+            if (this.dateType == 'today' ) {
+                return 'today-border day-frame'
+            }
+            else if (this.dateType == 'past') {
                 return 'past-border day-frame'
             }
             else return 'default-border day-frame'
         },
         scoreClass() {
+            //if (this.dateType == 'future' ) return 'score-green' 
             if (this.date.percentage >= 75) return 'score-green'
             else if (this.date.percentage >= 50) return 'score-yellow'
             else return 'score-red'
@@ -82,11 +95,11 @@ export default {
 }
 
 .flex-display {
-    flex-grow: 1;
+    /* flex-grow: 1; */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-
+    width: 100%;
 }
 
 .today-border {
@@ -101,6 +114,7 @@ export default {
 
 .default-border {
     border-color: #1e1e1e;
+    background-color: #202020;
 }
 
 .day-frame {
@@ -110,7 +124,8 @@ export default {
     padding: 10px;
     margin: 10px;
     height: 100%;
-    flex-grow: 1;
+    overflow:hidden;
+    /* flex-grow: 1; */
 }
 
 .day-frame:hover {

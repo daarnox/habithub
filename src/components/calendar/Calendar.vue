@@ -4,17 +4,23 @@
 
         <div class="week">
             <h2 style="color: #529955; padding-right: 20px;">//prev week</h2>
-            <DayFrame v-for="date in previusWeekDates" :key="date" v-bind:date="date" />
+            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; height: 100%">
+                <DayFrame v-for="date in previusWeekDates" :key="date" v-bind:date="date" />
+            </div>
         </div>
 
         <div class="week">
             <h2 style="color: #529955; padding-right: 20px;">//curr week</h2>
-            <DayFrame v-for="date in currentWeekDates" :key="date" v-bind:date="date" />
+            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; height: 100%">
+                <DayFrame v-for="date in currentWeekDates" :key="date" v-bind:date="date" />
+            </div>
         </div>
 
         <div class="week">
             <h2 style="color: #529955; padding-right: 20px;">//next week</h2>
-            <DayFrame v-for="date in nextWeekDates" :key="date" v-bind:date="date" />
+            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; height: 100%">
+                <DayFrame v-for="date in nextWeekDates" :key="date" v-bind:date="date" />
+            </div>
         </div>
 
 
@@ -73,15 +79,15 @@ export default {
         //     return result;
         // },
         previusWeekDates() {
-            if(store.callendarDatesAreSet) return store.callendarDates.slice(0, 7);
+            if (store.callendarDatesAreSet) return store.callendarDates.slice(0, 7);
             else return [];
         },
         currentWeekDates() {
-            if(store.callendarDatesAreSet) return store.callendarDates.slice(7, 14);
+            if (store.callendarDatesAreSet) return store.callendarDates.slice(7, 14);
             else return [];
         },
         nextWeekDates() {
-            if(store.callendarDatesAreSet) return store.callendarDates.slice(14, 21);
+            if (store.callendarDatesAreSet) return store.callendarDates.slice(14, 21);
             else return [];
         },
     }
@@ -100,7 +106,7 @@ export default {
 }
 
 .week {
-    height: 20%;
+    height: 26%;
     display: flex;
     align-items: center;
     justify-content: space-between;

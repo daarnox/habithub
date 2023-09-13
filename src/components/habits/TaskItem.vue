@@ -28,20 +28,24 @@ export default {
   },
   props: ["task"],
   async mounted() {
-    if (this.task.executions.length === 0 && this.task.is_regular) {
-      const { data, error2 } = await supabase
-        .from('executions')
-        .insert({ task_id: this.task.id, is_done: false, task_date: store.currentDisplayDate }).select();
-      if (error2 != null) console.log(error2.message);
-      // TODO: is this task the same object as in store.tasks?
-      this.task.executions.push(data);
-    }
+    // if (this.task.executions == null && this.task.is_regular) {
+    //   const { data, error2 } = await supabase
+    //     .from('executions')
+    //     .insert({ task_id: this.task.id, is_done: false, task_date: store.currentDisplayDate }).select();
+    //   if (error2 != null) console.log(error2.message);
+    //   else {
+    //     // TODO: is this task the same object as in store.tasks?
+    //     this.task.executions.push(data);
+    //     //this.ready
+    //   }
+
+    // }
 
   },
   computed: {
     isCompleted() {
-      if (this.task.executions.length === 0) return false;
-      else return this.task.executions[0].is_done;
+      if (this.task.executions == null) return false;
+      else return this.task.executions.is_done;
     },
   },
   methods: {

@@ -102,16 +102,16 @@ export default {
       return store.currentDisplayDateTasks;
     },
     completedTasks() {
-      return this.allTasks.filter( (task) => {
-        if (task.executions.length != 0)
-          return task.executions[0].is_done;
+      return this.allTasks.filter((task) => {
+        if (task.executions != null)
+          return task.executions.is_done;
         else return false;
       });
     },
     uncompletedTasks() {
-      return this.allTasks.filter( (task) => {
-        if (task.executions.length != 0)
-          return !task.executions[0].is_done;
+      return this.allTasks.filter((task) => {
+        if (task.executions != null)
+          return !task.executions.is_done;
         else return true;
       });
     },
