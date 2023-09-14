@@ -79,15 +79,15 @@ export default {
         //     return result;
         // },
         previusWeekDates() {
-            if (store.callendarDatesAreSet) return store.callendarDates.slice(0, 7);
+            if (store.callendarDatesAreSet) return store.currentCalendarDatesWithTasks.slice(0, 7);
             else return [];
         },
         currentWeekDates() {
-            if (store.callendarDatesAreSet) return store.callendarDates.slice(7, 14);
+            if (store.callendarDatesAreSet) return store.currentCalendarDatesWithTasks.slice(7, 14);
             else return [];
         },
         nextWeekDates() {
-            if (store.callendarDatesAreSet) return store.callendarDates.slice(14, 21);
+            if (store.callendarDatesAreSet) return store.currentCalendarDatesWithTasks.slice(14, 21);
             else return [];
         },
     }

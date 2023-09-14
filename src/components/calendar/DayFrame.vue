@@ -47,8 +47,8 @@ export default {
             else return 'default-border day-frame'
         },
         scoreClass() {
-            //if (this.dateType == 'future' ) return 'score-green' 
-            if (this.date.percentage >= 75) return 'score-green'
+            if (this.dateType == 'future' ) return 'score-none' 
+            else if (this.date.percentage >= 75) return 'score-green'
             else if (this.date.percentage >= 50) return 'score-yellow'
             else return 'score-red'
         },
@@ -73,6 +73,13 @@ export default {
 </script>
 
 <style scoped>
+
+.score-none {
+    padding-bottom: 5px;
+    border: solid #9cdcfe;
+    color: #9cdcfe;
+    border-width: 0 2px 2px 2px;
+}
 .score-red {
     padding-bottom: 5px;
     border: solid #900603;

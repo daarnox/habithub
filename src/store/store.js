@@ -15,126 +15,109 @@ export const store = reactive({
   //used in task list and callendar to retrieve proper data
   currentDisplayDate: null,
   //list of filtered tasks accoring to currentDisplayDate
-  currentDisplayDateTasks: [],
+  currentDateTasks: [],
   //list of days and its data used in callendar
   callendarDates: [],
   //used to check if data is ready to be used
   callendarDatesAreSet: false,
 
+  // new fields
+  currentCalendarDatesWithTasks: [],
+
   setUser(session) {
     this.user = session ? session.user : null;
-    if (this.user != null && this.tasks.length === 0) this.retreiveData();
+    //TODO: set current date here???? or maybe better just delete line below
+
+    if (this.user != null && this.currentDisplayDate == null) {
+      this.retreiveDate();
+      this.retrieveCurrentDayData();
+      this.retrieveCallendarData();
+    }
   },
-  async retreiveData(displayDateOffset = 0) {
-    //get todays date
-    dayjs.extend(utc);
-    dayjs.extend(timezone);
-    this.todaysDate = dayjs().tz('Europe/Warsaw').format('YYYY-MM-DD');
-    this.currentDisplayDate = dayjs(this.todaysDate).startOf('day').add(displayDateOffset, 'day').toISOString();
-    // this.currentDisplayDate = dayjs('2005-11-17').startOf('day').toISOString();
-    // console.log("Todays date:" + this.todaysDate)
-    // console.log("Display date:" + this.currentDisplayDate)
-
-    const previousWeekMonday = dayjs(this.currentDisplayDate).startOf('week').subtract(6, 'day').toISOString();
-    const nextWeekSunday = dayjs(this.currentDisplayDate).startOf('week').add(15, 'day').toISOString();
-
+  async retrieveCallendarData() {
+    this.callendarDatesAreSet = false;
+    this.currentCalendarDatesWithTasks = [];
+    const previousWeekMonday = dayjs(this.todaysDate).startOf('week').subtract(6, 'day').toISOString();
+    const nextWeekSunday = dayjs(this.todaysDate).startOf('week').add(15, 'day').toISOString();
     //get tasks and executions data
     const { data, error } = await supabase.from('tasks').select(`
-      id,
-      name,
-      description,
-      completed,
-      is_regular,
+      id, name, description, completed, is_regular,
       executions(id, created_at, is_done, task_date, task_id)
       `).eq('user_id', this.user.id)
       .filter('executions.task_date', 'gte', previousWeekMonday)
       .filter('executions.task_date', 'lte', nextWeekSunday);
-
     if (error != null) console.log(error.message)
     else {
-      this.tasks = data;
-      this.setCurrentDisplayDateTasks();
-      this.setCallendarDates();
-    }
-  },
-  setCurrentDisplayDateTasks() {
-    if (this.currentDisplayDate == null || this.tasks.length === 0) return;
-    this.currentDisplayDateTasks = []
-    //this.tasks.forEach(task => {
-    //});
-    for (const task of this.tasks) {
-
-      //console.log( task)
-      //const currentExecution = task.executions.filter(ex => ex.created_at === this.currentDisplayDate);
-      const currentExecution = task.executions.filter(ex => dayjs(this.currentDisplayDate).isSame(dayjs(ex.task_date, 'day')));
-      if (currentExecution.length > 1) console.log("Multiple Executions for one Day"); //TODO: Better error handling
-
-      //regular tasks need to have everyday executions
-      // if (task.is_regular && currentExecution.length === 0) {
-
-      //   // MOVE THIS PART OF CODE TO TASK ITEM
-
-      //   // //create Execution {is_done:false} 
-      //   // const { data, error2 } = await supabase
-      //   //   .from('executions')
-      //   //   .insert({ task_id: task.id, is_done: false }).select();
-      //   // if (error2 != null) console.log(error2.message);
-      //   // task.executions.push(data);
-      //   // currentExecution.push(data);
-      // }
-      //return all regular tasks and other ones with hasDate
-
-      if (task.is_regular || currentExecution.length === 1) this.currentDisplayDateTasks.push({ ...task, executions: currentExecution[0] });
-    }
-  },
-  changeCurrentDisplayDate(offset) {
-    this.currentDisplayDate = dayjs(this.currentDisplayDate).startOf('day').add(offset, 'day').toISOString();
-    this.setCurrentDisplayDateTasks();
-  },
-  setCallendarDates() {
-    //TODO: this code can propably be way shorter
-    if (this.currentDisplayDate == null || this.tasks.length === 0) return;
-    this.callendarDatesAreSet = false;
-    //empty dictionary filled with proper dates as keys
-    this.callendarDates = [];
-    //TODO: different currentDisplayDate for Habits page and Callendar
-    const firstDay = dayjs(this.currentDisplayDate).startOf('week').subtract(6, 'day');
-    for (let i = 0; i < 21; i++) { // 21 days for 3 weeks
-      const date = firstDay.add(i, 'day').format('YYYY-MM-DD');
-      //this.callendarDates[date.format('YYYY-MM-DD')] = {}; // Set the date as a key with an empty object as the value
-      this.callendarDates.push({ date: date, executions: [], percentage: 0 });
-    }
-    //temporary dictionary
-    const executionsByDate = {};
-    //iterate over all executions
-    for (const task of this.tasks) {
-      for (const exec of task.executions) {
-        const date = dayjs(exec.task_date).format('YYYY-MM-DD');
-        if (date == null) continue;
-        if (!executionsByDate[date]) executionsByDate[date] = [];
-        executionsByDate[date].push(exec);
+      this.tasks = data;  //TODO: handle this differently
+      const firstDay = dayjs(this.currentDisplayDate).startOf('week').subtract(6, 'day');
+      for (let i = 0; i < 21; i++) { // 21 days for 3 weeks
+        const date = firstDay.add(i, 'day').format('YYYY-MM-DD');
+        this.currentCalendarDatesWithTasks.push({ date: date, executions: [], percentage: 0 });
       }
-    }
-    for (const date in executionsByDate) {
-      const dayExecutions = executionsByDate[date];
-      const dayExecutionsAmount = dayExecutions.length;
-      const doneDayExecutionsAmount = dayExecutions.filter(execution => execution.is_done).length;
-      const percentage = dayExecutionsAmount > 0 ? (doneDayExecutionsAmount * 1.0 / dayExecutionsAmount) * 100 | 0 : 0;
-
-      const indexToUpdate = this.callendarDates.findIndex(item => item.date === date);
-      if (indexToUpdate !== -1) {
-        this.callendarDates[indexToUpdate] = {
-          date: date,
-          executions: dayExecutions,
-          percentage: percentage,
-        };
-      } else {
-        console.log('No object found with the specified date.');
+      //temporary dictionary
+      const executionsByDate = {};
+      //iterate over all executions
+      for (const task of this.tasks) {
+        for (const exec of task.executions) {
+          const date = dayjs(exec.task_date).format('YYYY-MM-DD');
+          if (date == null) continue;
+          if (!executionsByDate[date]) executionsByDate[date] = [];
+          executionsByDate[date].push(exec);
+        }
       }
+      for (const date in executionsByDate) {
+        const dayExecutions = executionsByDate[date];
+        const dayExecutionsAmount = dayExecutions.length;
+        const doneDayExecutionsAmount = dayExecutions.filter(execution => execution.is_done).length;
+        const percentage = dayExecutionsAmount > 0 ? (doneDayExecutionsAmount * 1.0 / dayExecutionsAmount) * 100 | 0 : 0;
 
+        const indexToUpdate = this.currentCalendarDatesWithTasks.findIndex(item => item.date === date);
+        if (indexToUpdate !== -1) {
+          this.currentCalendarDatesWithTasks[indexToUpdate] = {
+            date: date,
+            executions: dayExecutions,
+            percentage: percentage,
+          };
+        } else {
+          console.log('No object found with the specified date.');
+        }
+      }
+      this.callendarDatesAreSet = true;
     }
-    this.callendarDatesAreSet = true;
-    // console.log(this.callendarDates)
+  },
+  async retrieveCurrentDayData(offset = 0) {
+    this.currentDateTasks = [];
+    //get current days date including offset
+    this.currentDisplayDate = dayjs(this.currentDisplayDate).startOf('day').add(offset, 'day').toISOString(); //TODO: what if date is null at first
+    //get tasks and executions data
+    const { data, error } = await supabase.from('tasks').select(`
+      id, name, description, completed, is_regular,
+      executions(id, created_at, is_done, task_date, task_id)`)
+      .eq('user_id', this.user.id)
+      .eq('executions.task_date', this.currentDisplayDate);
+    if (error != null) {
+      //TODO: better error handling
+      console.log(error.message);
+    }
+    else {
+      //filter through tasks selecting only regular ones and single ones with proper date
+      //change executions from one element lists into an single objects
+      this.currentDateTasks = data.filter(task => {
+        if (task.executions != null) {
+          //TODO: multiple executions error handling
+          if (task.executions.length > 1) console.log("Multiple Executions for one Day");
+          task.executions = task.executions[0];
+        }
+        return (task.is_regular || task.executions)
+      });
+    }
+  },
+  retreiveDate(displayDateOffset = 0) {
+    //get todays date according to timezone
+    dayjs.extend(utc);
+    dayjs.extend(timezone);
+    this.todaysDate = dayjs().tz('Europe/Warsaw').format('YYYY-MM-DD');
+    this.currentDisplayDate = dayjs(this.todaysDate).startOf('day').add(displayDateOffset, 'day').toISOString();
   },
   async addTask(task) {
     //TODO: try catch block?????
@@ -157,9 +140,9 @@ export const store = reactive({
     }
     //retrieve insterted task in order to get its database id
     this.tasks.push({ ...data[0], executions: execution });
-    this.currentDisplayDateTasks.push({ ...data[0], executions: execution[0] });
+    this.currentDateTasks.push({ ...data[0], executions: execution[0] });
     //update callendar singleTasks list
-    this.setCallendarDates();
+    //this.setCallendarDates();
     //is this one necessary?
     //this.retreiveData();
 
@@ -181,7 +164,7 @@ export const store = reactive({
         .update({ is_done: !task.executions.is_done, task_date: this.currentDisplayDate })
         .eq('id', task.executions.id)
       if (error2 != null) console.log(error2.message);
-      task.executions.is_done = !task.executions.is_done;    
+      task.executions.is_done = !task.executions.is_done;
     } else {
       const { data, error2 } = await supabase
         .from('executions')
@@ -191,18 +174,18 @@ export const store = reactive({
     }
 
     //update local list
-   
+
     //update callendar percentage
-    this.setCallendarDates();
+    //this.setCallendarDates();
   },
   async removeTask(task) {
     this.tasks = this.tasks.filter(t => t.id != task.id);
-    this.currentDisplayDateTasks = this.currentDisplayDateTasks.filter(t => t.id != task.id);
+    this.currentDateTasks = this.currentDateTasks.filter(t => t.id != task.id);
     // TODO: try catch block?????
     const { error } = await supabase.from('tasks').delete().eq('id', task.id);
     if (error != null) console.log(error.message);
     //update callendar singleTasks list
-    this.setCallendarDates();
+    this.retrieveCallendarData();
   },
 
 

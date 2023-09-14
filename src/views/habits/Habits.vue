@@ -92,14 +92,13 @@ export default {
       this.showAddHabitMenu = !this.showAddHabitMenu;
     },
     changeCurrentDisplayDate(offset){
-      store.changeCurrentDisplayDate(offset);
+      store.retrieveCurrentDayData(offset);
     }
 
   },
   computed: {
     allTasks() {
-      // return store.tasks;
-      return store.currentDisplayDateTasks;
+      return store.currentDateTasks;
     },
     completedTasks() {
       return this.allTasks.filter((task) => {
