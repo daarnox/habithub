@@ -127,7 +127,7 @@ export default {
 .day-frame {
 
     border-style: solid;
-    border-radius: 10px;
+    border-radius: 24px;
     padding: 10px;
     margin: 10px;
     height: 100%;

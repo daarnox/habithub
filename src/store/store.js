@@ -69,7 +69,7 @@ export const store = reactive({
         const dayExecutions = executionsByDate[date];
         const dayExecutionsAmount = dayExecutions.length;
         const doneDayExecutionsAmount = dayExecutions.filter(execution => execution.is_done).length;
-        const percentage = dayExecutionsAmount > 0 ? (doneDayExecutionsAmount * 1.0 / dayExecutionsAmount) * 100 | 0 : 0;
+        const percentage = dayExecutionsAmount > 0 ? ((doneDayExecutionsAmount * 1.0 / dayExecutionsAmount) * 100 | 0) : 100;
 
         const indexToUpdate = this.currentCalendarDatesWithTasks.findIndex(item => item.date === date);
         if (indexToUpdate !== -1) {
