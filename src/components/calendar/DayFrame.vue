@@ -6,7 +6,7 @@
         </div>
 
         <div :class="scoreClass">
-            <p v-if="dateType != 'future' ">{{ date.percentage }}%</p>
+            <p v-if="dateType != 'future' ">{{ day.percentage }}%</p>
         </div>
     </div>
 </template>
@@ -17,21 +17,21 @@ import { store } from '@/store/store';
 
 export default {
     name: "DayFrame",
-    props: ["date"],
+    props: ["day"],
     data() {
         return {
         };
     },
     computed: {
         formattedDate() {
-            const parsedDate = dayjs(this.date.date, 'YYYY-MM-DD');
+            const parsedDate = dayjs(this.day.date, 'YYYY-MM-DD');
             return parsedDate.format('DD/MM');
         },
         dateType(){
-            if (dayjs().isSame(dayjs(this.date.date, 'YYYY-MM-DD'), 'day')) {
+            if (dayjs().isSame(dayjs(this.day.date, 'YYYY-MM-DD'), 'day')) {
                 return 'today'
             }
-            else if (dayjs().isAfter(dayjs(this.date.date, 'YYYY-MM-DD'), 'day')) {
+            else if (dayjs().isAfter(dayjs(this.day.date, 'YYYY-MM-DD'), 'day')) {
                 return 'past'
             }
             else return 'future'
@@ -48,25 +48,27 @@ export default {
         },
         scoreClass() {
             if (this.dateType == 'future' ) return 'score-none' 
-            else if (this.date.percentage >= 75) return 'score-green'
-            else if (this.date.percentage >= 50) return 'score-yellow'
+            else if (this.day.percentage >= 75) return 'score-green'
+            else if (this.day.percentage >= 50) return 'score-yellow'
             else return 'score-red'
         },
         singleTasksList() {
             //TODO: terrible code, this part shouldnt exist, change it all
             //console.log(this.date)
-            let result = [];
-            for (const exec of this.date.executions) {
-                // console.log(exec)
-                const indexToCheck = store.tasks.findIndex(t => t.id === exec.task_id);
-                if (indexToCheck !== -1) {
-                    if (!store.tasks[indexToCheck].is_regular) result.push(store.tasks[indexToCheck].name)
+            // let result = [];
+            // for (const exec of this.date.executions) {
+            //     // console.log(exec)
+            //     const indexToCheck = store.tasks.findIndex(t => t.id === exec.task_id);
+            //     if (indexToCheck !== -1) {
+            //         if (store.tasks[indexToCheck].type=="on_date" || store.tasks[indexToCheck].type=="until_date") 
+            //             result.push(store.tasks[indexToCheck].name)
 
-                } else {
-                    console.log('No object found with the specified date.');
-                }
-            }
-            return result
+            //     } else {
+            //         console.log('No object found with the specified date.');
+            //     }
+            // }
+            // return result
+            return [];
         }
     }
 };

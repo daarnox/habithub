@@ -4,12 +4,25 @@
             <h1>add a habit</h1>
             <input class="text-input" type="text" name="name" placeholder="name" v-model="task.name"><br><br>
             <input class="text-input" type="text" name="details" placeholder="details" v-model="task.description"><br><br>
-            <div>
+            <!-- <div>
                 <input type="checkbox" id="isRegular" name="isRegular" value="false" v-model="task.is_regular">
-                <label for="isRegular"> Save as regular task</label>                
-            </div>
+                <label for="isRegular"> Save as regular task</label>
+            </div> -->
+            <!-- //<label for="types">Choose a task's type:</label> -->
+
+            <select name="types" id="types" v-model="task.type">
+                <option disabled value="">Please select one</option>
+                <option value="regular">Regular</option>
+                <option value="on_date">Single on date</option>
+                <option value="until_date">Single until date</option>
+                <option value="until_done">Single until done</option>
+            </select>
             <input type="submit" class="button" :value="'Add Habit'" />
+        <div v-if="errorMsg">
+            <p style="color:red; padding:10px">{{ errorMsg }}</p>
+        </div>            
         </form>
+
     </div>
 </template>
 
@@ -19,12 +32,13 @@ import { store } from '@/store/store'
 export default {
     data() {
         return {
+            errorMsg: null,
             task: {
                 id: null,
                 name: null,
                 description: null,
                 completed: false,
-                is_regular: false
+                type: null
             },
         }
     },
@@ -33,18 +47,27 @@ export default {
             this.$emit('closeAddHabit');
         },
         async postData(e) {
-            await store.addTask(this.task);
-            this.$emit('closeAddHabit');
+                //             await store.addTask(this.task);
+                // this.$emit('closeAddHabit');
+            if (this.task.name == null || this.task.description == null  || this.task.type == null ){
+                this.errorMsg = "Fill all fields";
+                setTimeout(() => {
+                    this.errorMsg = null;
+                }, 4000);
+
+            } else {
+                await store.addTask(this.task);
+                this.$emit('closeAddHabit');
+            }
         }
     }
 }
-
 </script>
 
 <style scoped>
 .form {
-    width: 400px;
-    height: 400px;
+    width: 450px;
+    height: 450px;
     padding: 50px;
     background: #1e1e1e;
     border-radius: 50%;
