@@ -12,10 +12,10 @@
 
             <select name="types" id="types" v-model="task.type">
                 <option disabled value="">Please select one</option>
-                <option value="regular">Regular</option>
-                <option value="on_date">Single on date</option>
-                <option value="until_date">Single until date</option>
-                <option value="until_done">Single until done</option>
+                <option value="REGULAR">Regular</option>
+                <option value="ON_DATE">Single on date</option>
+                <option value="UNTIL_DATE">Single until date</option>
+                <option value="UNTIL_DONE">Single until done</option>
             </select>
             <input type="submit" class="button" :value="'Add Habit'" />
         <div v-if="errorMsg">

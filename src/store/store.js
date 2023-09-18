@@ -53,10 +53,10 @@ export const store = reactive({
         task.executions = task.executions[0];
       }
       //decide whether task should be added based on its type
-      if (task.type === "regular") return true
-      else if (task.type === "until_done") return (task.keep_on || task.executions)
-      else if (task.type === "on_date") return task.executions
-      else if (task.type === "until_date") {
+      if (task.type === "REGULAR") return true
+      else if (task.type === "UNTIL_DONE") return (task.keep_on || task.executions)
+      else if (task.type === "ON_DATE") return task.executions
+      else if (task.type === "UNTIL_DATE") {
         //TODO: would it work properly in calendar use case?
         if (task.executions) {
           //TODO send update?
@@ -122,19 +122,20 @@ export const store = reactive({
           });
           return temp_copy;
         });
+        // TODO: processDayData(temp) ??
         this.currentCalendarData[index] = {...day, tasks: temp};
       }); 
-
+      //TODO: move this code to dayframe
       //calculate percentage for each day
       this.currentCalendarData.forEach((day, index) => {
         let doneTasks = 0;        
         let totalTasks = 0;
         day.tasks.forEach((task) => {
-          if (task.type === "regular") totalTasks++;
-          if (task.type === "regular" && task.executions.length === 1) doneTasks++;
+          if (task.type === "REGULAR") totalTasks++;
+          if (task.type === "REGULAR" && task.executions.length === 1) doneTasks++;
           //if (task.type === "on_date" && task.executions != null) doneTasks++;
           //TODO: rest of task types cases
-          if (task.type === "on_date"){
+          if (task.type === "ON_DATE"){
             if (task.executions.length === 1){
               totalTasks++;
               if(task.executions[0].is_done) doneTasks++;
@@ -147,57 +148,6 @@ export const store = reactive({
       this.callendarDatesAreSet = true;
     }
   },
-  async retrieveCallendarData() {
-  this.callendarDatesAreSet = false;
-  this.currentCalendarDatesWithTasks = [];
-  const previousWeekMonday = dayjs(this.todaysDate).startOf('week').subtract(6, 'day').toISOString();
-  const nextWeekSunday = dayjs(this.todaysDate).startOf('week').add(15, 'day').toISOString();
-  //get tasks and executions data
-  const { data, error } = await supabase.from('tasks').select(`
-      id, name, description, completed, type,
-      executions(id, created_at, is_done, task_date, task_id)
-      `).eq('user_id', this.user.id)
-    .filter('executions.task_date', 'gte', previousWeekMonday)
-    .filter('executions.task_date', 'lte', nextWeekSunday);
-  if (error != null) console.log(error.message)
-  else {
-    this.tasks = data;  //TODO: handle this differently
-    const firstDay = dayjs(this.currentDisplayDate).startOf('week').subtract(6, 'day');
-    for (let i = 0; i < 21; i++) { // 21 days for 3 weeks
-      const date = firstDay.add(i, 'day').format('YYYY-MM-DD');
-      this.currentCalendarDatesWithTasks.push({ date: date, executions: [], percentage: 0 });
-    }
-    //temporary dictionary
-    const executionsByDate = {};
-    //iterate over all executions
-    for (const task of this.tasks) {
-      for (const exec of task.executions) {
-        const date = dayjs(exec.task_date).format('YYYY-MM-DD');
-        if (date == null) continue;
-        if (!executionsByDate[date]) executionsByDate[date] = [];
-        executionsByDate[date].push(exec);
-      }
-    }
-    for (const date in executionsByDate) {
-      const dayExecutions = executionsByDate[date];
-      const dayExecutionsAmount = dayExecutions.length;
-      const doneDayExecutionsAmount = dayExecutions.filter(execution => execution.is_done).length;
-      const percentage = dayExecutionsAmount > 0 ? ((doneDayExecutionsAmount * 1.0 / dayExecutionsAmount) * 100 | 0) : 100;
-
-      const indexToUpdate = this.currentCalendarDatesWithTasks.findIndex(item => item.date === date);
-      if (indexToUpdate !== -1) {
-        this.currentCalendarDatesWithTasks[indexToUpdate] = {
-          date: date,
-          executions: dayExecutions,
-          percentage: percentage,
-        };
-      } else {
-        console.log('No object found with the specified date.');
-      }
-    }
-    this.callendarDatesAreSet = true;
-  }
-},
   async addTask(task) {
   //TODO: try catch block?????
   const { data, error } = await supabase
@@ -207,7 +157,7 @@ export const store = reactive({
   const new_task = data[0];
   //if task is irregular add by default todays execution to it
   let execution = [];
-  if (task.type === "on_date" || task.type === "until_date") {
+  if (task.type === "ON_DATE" || task.type === "UNTIL_DATE") {
     const { data, error } = await supabase
       .from('executions')
       .insert({ task_id: new_task.id, is_done: false, task_date: this.currentDisplayDate }).select();
@@ -229,7 +179,7 @@ export const store = reactive({
 },
   async toggleTaskCompletion(task) {
   // TODO try catch block??
-  if (task.type == "until_done") {
+  if (task.type == "UNTIL_DONE") {
     const { error } = await supabase
       .from('tasks')
       .update({ keep_on: !task.keep_on })
@@ -238,7 +188,7 @@ export const store = reactive({
   }
   //either delete it or update execution depending on the task's type
   if (task.executions != null) {
-    if (task.type === "regular" || task.type === "until_done") {
+    if (task.type === "REGULAR" || task.type === "UNTIL_DONE") {
       const { error2 } = await supabase.from('executions').delete().eq('id', task.executions.id);
       if (error2 != null) console.log(error2.message);
       task.executions = null;
@@ -269,7 +219,5 @@ export const store = reactive({
   //update callendar singleTasks list
   this.retrieveCallendarData();
 },
-
-
 
 })

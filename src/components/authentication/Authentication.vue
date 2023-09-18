@@ -66,6 +66,7 @@ export default {
   font-family: Consolas;
   background-color: #1e1e1e;
   color: white;
+  border-style: none;
 }
 .active-tab{
   background-color: #2b2b2b;
@@ -75,8 +76,8 @@ export default {
   height:300px;
   width:100%;
   background-color: #2b2b2b;
-  border-color: #fff;
-  border-style: solid;
+  /* border-color: #fff;
+  border-style: solid; */
   border-bottom-left-radius: 25px;
   border-bottom-right-radius: 25px;
 }
@@ -93,7 +94,7 @@ export default {
   align-items: center;
   justify-content: space-evenly;
   flex-direction: column;
-  border-color: #fff;
+  border-color: #529955;
   border-style: solid;
 }
 

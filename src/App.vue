@@ -60,7 +60,8 @@ export default {
   color: #fff;
   min-height: 100vh;
   position: relative;
-  background: linear-gradient(45deg, #212f45 20%, #1b3a4b 20% 40%, #212f45 40% 60%, #272640 60% 80%, #312244 80%); 
+  /* background: linear-gradient(45deg, #212f45 20%, #1b3a4b 20% 40%, #212f45 40% 60%, #272640 60% 80%, #312244 80%); */
+  background: linear-gradient(45deg, #224124 20%, #202020 20% 80%, #224124 80%);
   /* animation: mymove 5s infinite alternate; */  
 }
 
