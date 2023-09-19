@@ -28,8 +28,8 @@ export default {
     font-weight: 700;
     text-align: center;
     padding: 16px 14px 18px;
-    color: #fff;
-    box-shadow: inset 0 0 0 2px #fff;
+    color: #fff111;
+    /* box-shadow: inset 0 0 0 2px #fff; */
     background-color: transparent;
     height: 48px;
 

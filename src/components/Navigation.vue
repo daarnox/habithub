@@ -6,7 +6,7 @@
                 <li><router-link class="link" to="/">home.js</router-link></li>
                 <li><router-link class="link" :to="{ name: 'habits' }">habits.js</router-link></li>
                 <li><router-link class="link" :to="{ name: 'summary' }">summary.js</router-link></li>
-                <button class="link" style="border:none; font-family: consolas; color:#dcdcaa" @click="handleLogOut()">logout.js</button>
+                <button class="link" style="border:none; font-family: consolas; color:#529955" @click="handleLogOut()">logout.js</button>
             </ul>
         </nav>
     </header>

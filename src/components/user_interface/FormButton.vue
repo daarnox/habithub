@@ -12,32 +12,47 @@ export default {
 
 <style scoped>
 .button {
-    display: inline-block;
-    outline: none;
-    cursor: pointer;
-    font-size: 14px;
-    line-height: 1;
-    border-radius: 500px;
-    transition-property: background-color, border-color, color, box-shadow, filter;
-    transition-duration: .3s;
-    border: 1px solid transparent;
-    letter-spacing: 2px;
-    min-width: 160px;
-    text-transform: uppercase;
-    white-space: normal;
-    font-weight: 700;
-    text-align: center;
-    padding: 16px 14px 18px;
-    color: #616467;
-    box-shadow: inset 0 0 0 2px #fff;
-    background-color: transparent;
-    height: 48px;
+  /* display: inline-block; */
+  /* height: 200px;
+  width: 200px; */
+  /* -webkit-appearance: none; */
+  /* box-shadow:
+    -5px -5px 5px rgba(82, 153, 85, 0.5),
+    5px 5px 5px rgb(156, 220, 254, 0.2); */
+  box-shadow:
+    -5px -5px 5px rgba(70, 70, 70, 0.1),
+    5px 5px 5px rgb(0, 0, 0, 0.2);
+  /* position: absolute; */
+  /* transform: translate(-50%, -50%); */
+  /* top: 50%;
+  left: 50%; */
+  /* border-radius: 50%; */
+  border-radius: 50px;
+  min-width: 50px;
+  height: 50px;
+  border: 5px solid #202020;
+  background-color: #1e1e1e;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: 700;
+  text-align: center;
+  font-family: consolas;
+  margin: 5px;
+  color: #fff;
+  font-size: 14px;
+  padding: 25px;
 }
 
 .button:hover {
-    color: #fff;
-    background-color: #529955;
-    /* border-color: #529955; */
-    /* box-shadow: inset 0 0 0 2px #529955; */
+  /* background-color: #529955; */
+  box-shadow:
+    -5px -5px 5px rgba(70, 70, 70, 0.1),
+    5px 5px 5px rgb(0, 0, 0, 0.2),
+    inset -5px -5px 5px rgba(70, 70, 70, 0.1),
+    inset 5px 5px 5px rgb(0, 0, 0, 0.2); 
+  color: #529955;
 }
 </style>

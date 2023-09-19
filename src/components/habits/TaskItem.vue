@@ -46,12 +46,14 @@ export default {
   },
   methods: {
     async toggleTaskCompletion() {
+      //need to pass a date to allow user switching days without waiting for a toggle to complete
+      const currentDate = store.currentDisplayDate; 
       if (this.isBeingToggled) this.cancelToggle();
       else {
         //TODO: delete cancelToggle and place all code here?
         this.isBeingToggled = true;
         setTimeout(() => {
-          if (this.isBeingToggled) store.toggleTaskCompletion(this.task);
+          if (this.isBeingToggled) store.toggleTaskCompletion(this.task, currentDate);
         }, 2000);
       }
     },

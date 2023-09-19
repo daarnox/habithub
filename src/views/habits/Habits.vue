@@ -15,11 +15,12 @@
           </button>
         </div>
         <div style="">
-          <h1>{{dateTitle}} tasks:</h1>
+          <h1>{{ dateTitle }} tasks:</h1>
         </div>
         <div style="flex: 1;">
           <button class="button" @click="toggleAddHabitMenu" style="float: right;">
-            <Icon icon="material-symbols:add" />Add Habit
+            <!-- <Icon icon="material-symbols:add" /> add task -->
+            add task
           </button>
         </div>
       </div>
@@ -30,7 +31,7 @@
           <h1 style="margin: 10px; color:#529955">//todo:</h1>
           <div class="task-list">
             <ul>
-              <TaskItem v-for="(task, index) in uncompletedTasks" :key="task.id" v-bind:task="task"/>
+              <TaskItem v-for="(task, index) in uncompletedTasks" :key="task.id" v-bind:task="task" />
             </ul>
           </div>
         </div>
@@ -39,7 +40,7 @@
           <h1 style="margin: 10px; color:#529955">//done:</h1>
           <div class="task-list">
             <ul>
-              <TaskItem v-for="(task, index) in completedTasks" :key="task.id" v-bind:task="task"/>
+              <TaskItem v-for="(task, index) in completedTasks" :key="task.id" v-bind:task="task" />
             </ul>
           </div>
         </div>
@@ -91,7 +92,7 @@ export default {
     toggleAddHabitMenu() {
       this.showAddHabitMenu = !this.showAddHabitMenu;
     },
-    changeCurrentDisplayDate(offset){
+    changeCurrentDisplayDate(offset) {
       store.retrieveCurrentDayData(offset);
     }
 
@@ -114,14 +115,14 @@ export default {
         else return true;
       });
     },
-    dateTitle(){
+    dateTitle() {
       const currentDate = dayjs(store.currentDisplayDate);
       const todaysDate = dayjs(store.todaysDate);
       const differenceInDays = currentDate.diff(todaysDate, 'day');
 
-      if (differenceInDays === -1) return 'Yesterdays'
-      else if (differenceInDays === 0) return 'Todays'
-      else if (differenceInDays === 1) return 'Tomorrows'
+      if (differenceInDays === -1) return 'yesterdays'
+      else if (differenceInDays === 0) return 'todays'
+      else if (differenceInDays === 1) return 'tomorrows'
       else return currentDate.format('DD/MM')
     }
 
@@ -177,29 +178,47 @@ export default {
 }
 
 .button {
-  display: inline-block;
-  outline: none;
-  cursor: pointer;
-  font-size: 14px;
-  line-height: 1;
-  border-radius: 500px;
-  transition-property: background-color, border-color, color, box-shadow, filter;
-  transition-duration: .3s;
-  border: 1px solid transparent;
-  letter-spacing: 2px;
+  /* display: inline-block; */
+  /* height: 200px;
+  width: 200px; */
+  /* -webkit-appearance: none; */
+  /* box-shadow:
+    -5px -5px 5px rgba(82, 153, 85, 0.5),
+    5px 5px 5px rgb(156, 220, 254, 0.2); */
+  box-shadow:
+    -5px -5px 5px rgba(70, 70, 70, 0.1),
+    5px 5px 5px rgb(0, 0, 0, 0.2);
+  /* position: absolute; */
+  /* transform: translate(-50%, -50%); */
+  /* top: 50%;
+  left: 50%; */
+  /* border-radius: 50%; */
+  border-radius: 50px;
   min-width: 50px;
-  text-transform: uppercase;
-  white-space: normal;
+  height: 50px;
+  border: 5px solid #202020;
+  background-color: #1e1e1e;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
   font-weight: 700;
   text-align: center;
-  padding: 16px 14px 18px;
+  font-family: consolas;
+  margin: 5px;
   color: #fff;
-  box-shadow: inset 0 0 0 2px #fff;
-  background-color: transparent;
-  height: 50px;
+  font-size: 14px;
+  padding: 25px;
 }
 
 .button:hover {
-  background-color: #529955;
+  /* background-color: #529955; */
+  box-shadow:
+    -5px -5px 5px rgba(70, 70, 70, 0.1),
+    5px 5px 5px rgb(0, 0, 0, 0.2),
+    inset -5px -5px 5px rgba(70, 70, 70, 0.1),
+    inset 5px 5px 5px rgb(0, 0, 0, 0.2); 
+  color: #529955;
 }
 </style>

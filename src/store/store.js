@@ -115,109 +115,114 @@ export const store = reactive({
       //fill the list
       this.currentCalendarData.forEach((day, index) => {
         // get temp tasks list with only executions for particular day
-        const temp = data.map(task => {
-          let temp_copy = { ...task };
-          temp_copy.executions = task.executions.filter(ex => {
+        let temp = data.map(task => {
+          let task_copy = { ...task };
+          task_copy.executions = task.executions.filter(ex => {
             return dayjs(ex.task_date, 'YYYY-MM-DD').isSame(dayjs(day.date, 'YYYY-MM-DD'), 'day');
           });
-          return temp_copy;
+          return task_copy;
         });
         // TODO: processDayData(temp) ??
-        this.currentCalendarData[index] = {...day, tasks: temp};
-      }); 
+        // temp.forEach(t => console.log(t.executions == null))
+        // console.log(temp);
+        //temp = this.processDayData(temp);
+        this.currentCalendarData[index] = { ...day, tasks: temp };
+      });
       //TODO: move this code to dayframe
       //calculate percentage for each day
       this.currentCalendarData.forEach((day, index) => {
-        let doneTasks = 0;        
+        let doneTasks = 0;
         let totalTasks = 0;
         day.tasks.forEach((task) => {
           if (task.type === "REGULAR") totalTasks++;
           if (task.type === "REGULAR" && task.executions.length === 1) doneTasks++;
           //if (task.type === "on_date" && task.executions != null) doneTasks++;
           //TODO: rest of task types cases
-          if (task.type === "ON_DATE"){
-            if (task.executions.length === 1){
+          if (task.type === "ON_DATE") {
+            if (task.executions.length === 1) {
               totalTasks++;
-              if(task.executions[0].is_done) doneTasks++;
+              if (task.executions[0].is_done) doneTasks++;
             }
-          } 
+          }
         });
-         const percentage = totalTasks > 0 ? ((doneTasks * 1.0 / totalTasks) * 100 | 0) : 100;
-         this.currentCalendarData[index] = {...day, percentage: percentage};
+        const percentage = totalTasks > 0 ? ((doneTasks * 1.0 / totalTasks) * 100 | 0) : 100;
+        this.currentCalendarData[index] = { ...day, percentage: percentage };
       });
       this.callendarDatesAreSet = true;
     }
   },
-  async addTask(task) {
-  //TODO: try catch block?????
-  const { data, error } = await supabase
-    .from('tasks')
-    .insert({ name: task.name, description: task.description, completed: task.completed, user_id: this.user.id, type: task.type }).select();
-  if (error != null) console.log(error);
-  const new_task = data[0];
-  //if task is irregular add by default todays execution to it
-  let execution = [];
-  if (task.type === "ON_DATE" || task.type === "UNTIL_DATE") {
+  async addTask(task, date = null) {
+    //TODO: try catch block?????
     const { data, error } = await supabase
-      .from('executions')
-      .insert({ task_id: new_task.id, is_done: false, task_date: this.currentDisplayDate }).select();
-    //console.log(data[0]);
-    if (error != null) console.log(error.message);
-    else execution.push(data[0]);
-    //console.log(error)
-    //console.log(execution);
-  }
-  //retrieve insterted task in order to get its database id
-  this.tasks.push({ ...data[0], executions: execution });
-  this.currentDateTasks.push({ ...data[0], executions: execution[0] });
-  //update callendar singleTasks list
-  //this.setCallendarDates();
-  //is this one necessary?
-  //this.retreiveData();
-
-
-},
-  async toggleTaskCompletion(task) {
-  // TODO try catch block??
-  if (task.type == "UNTIL_DONE") {
-    const { error } = await supabase
       .from('tasks')
-      .update({ keep_on: !task.keep_on })
-      .eq('id', task.id)
-    if (error != null) console.log(error.message);
-  }
-  //either delete it or update execution depending on the task's type
-  if (task.executions != null) {
-    if (task.type === "REGULAR" || task.type === "UNTIL_DONE") {
-      const { error2 } = await supabase.from('executions').delete().eq('id', task.executions.id);
-      if (error2 != null) console.log(error2.message);
-      task.executions = null;
+      .insert({ name: task.name, description: task.description, completed: task.completed, user_id: this.user.id, type: task.type }).select();
+    if (error != null) console.log(error);
+    const new_task = data[0];
+    //if task is irregular add by default todays execution to it
+    let execution = [];
+    if (task.type === "ON_DATE" || task.type === "UNTIL_DATE") {
+      const temp_date = date ? date : this.currentDisplayDate;
+      const { data, error } = await supabase
+        .from('executions')
+        .insert({ task_id: new_task.id, is_done: false, task_date: temp_date }).select();
+      //console.log(data[0]);
+      if (error != null) console.log(error.message);
+      else execution.push(data[0]);
+      //console.log(error)
+      //console.log(execution);
+    }
+    //retrieve insterted task in order to get its database id
+    this.tasks.push({ ...data[0], executions: execution });
+    this.currentDateTasks.push({ ...data[0], executions: execution[0] });
+    //update callendar singleTasks list
+    //this.setCallendarDates();
+    //is this one necessary?
+    //this.retreiveData();
+    this.retrieveCurrentCalendarData();
+
+
+  },
+  async toggleTaskCompletion(task, currentDate) {
+    // TODO try catch block??
+    if (task.type == "UNTIL_DONE") {
+      const { error } = await supabase
+        .from('tasks')
+        .update({ keep_on: !task.keep_on })
+        .eq('id', task.id)
+      if (error != null) console.log(error.message);
+    }
+    //either delete it or update execution depending on the task's type
+    if (task.executions != null) {
+      if (task.type === "REGULAR" || task.type === "UNTIL_DONE") {
+        const { error2 } = await supabase.from('executions').delete().eq('id', task.executions.id);
+        if (error2 != null) console.log(error2.message);
+        task.executions = null;
+      } else {
+        const { data, error2 } = await supabase
+          .from('executions')
+          .update({ is_done: !task.executions.is_done, task_date: currentDate })
+          .eq('id', task.executions.id).select();
+        if (error2 != null) console.log(error2.message);
+        task.executions = data[0];
+      }
     } else {
       const { data, error2 } = await supabase
         .from('executions')
-        .update({ is_done: !task.executions.is_done, task_date: this.currentDisplayDate })
-        .eq('id', task.executions.id).select();
+        .insert({ task_id: task.id, is_done: true, task_date: currentDate }).select();
       if (error2 != null) console.log(error2.message);
       task.executions = data[0];
     }
-  } else {
-    const { data, error2 } = await supabase
-      .from('executions')
-      .insert({ task_id: task.id, is_done: true, task_date: this.currentDisplayDate }).select();
-    if (error2 != null) console.log(error2.message);
-    task.executions = data[0];
-  }
-  //TODO: update percentage differently??
-  this.retrieveCurrentCalendarData();
-},
+    //TODO: update percentage differently??
+    this.retrieveCurrentCalendarData();
+  },
   async removeTask(task) {
-  this.tasks = this.tasks.filter(t => t.id != task.id);
-  this.currentDateTasks = this.currentDateTasks.filter(t => t.id != task.id);
-  // TODO: try catch block?????
-  const { error } = await supabase.from('tasks').delete().eq('id', task.id);
-  if (error != null) console.log(error.message);
-  //update callendar singleTasks list
-  this.retrieveCallendarData();
-},
+    this.tasks = this.tasks.filter(t => t.id != task.id);
+    this.currentDateTasks = this.currentDateTasks.filter(t => t.id != task.id);
+    // TODO: try catch block?????
+    const { error } = await supabase.from('tasks').delete().eq('id', task.id);
+    if (error != null) console.log(error.message);
+    //update callendar singleTasks list
+    this.retrieveCurrentCalendarData();
+  },
 
 })

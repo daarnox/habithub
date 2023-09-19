@@ -5,7 +5,7 @@
         <div style="flex: 1; background-color: none;">
         </div>
         <div style="background-color: none;">
-          <h1>Hello {{userName}}, welcome to home page:</h1>
+          <h1>hello {{userName}}, welcome to home page:</h1>
         </div>
         <div style="flex: 1;  background-color: none;">
         </div>
@@ -13,10 +13,10 @@
 
       <div class="main-part" style="height: 100%;">
         <div class="part" style="float: left;">
-          <h1 style="color:#529955">//future feature</h1>
+          <h1 style="color:#9cdcfe">//future feature</h1>
         </div>
         <div class="part" style="float: right;">
-          <h1 style="color:#529955">//future feature</h1>
+          <h1 style="color:#9cdcfe">//future feature</h1>
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@
   <div class="backdrop" @click.self="closeAddHabit">
 
     <div class="container">
-      <h1>Welcome <br /> to our page</h1>
+      <h1>welcome <br/> to our page</h1>
 
       <div>
         <div style="display:flex">
@@ -67,15 +67,17 @@ export default {
   background-color: #1e1e1e;
   color: white;
   border-style: none;
+  /* border-top-left-radius: 25px;
+  border-top-right-radius: 25px; */
 }
 .active-tab{
-  background-color: #2b2b2b;
+  background-color: #252525;
 }
 
 .form-container {
-  height:300px;
+  height:350px;
   width:100%;
-  background-color: #2b2b2b;
+  background-color: #252525;
   /* border-color: #fff;
   border-style: solid; */
   border-bottom-left-radius: 25px;
@@ -96,6 +98,13 @@ export default {
   flex-direction: column;
   border-color: #529955;
   border-style: solid;
+
+  box-shadow:
+    /* -5px -5px 5px rgba(255, 0, 191, 0.5), */
+    -5px -5px 5px rgba(35, 227, 254, 0.3),
+    /* 5px 5px 5px rgb(0, 0, 0, 0.2), */
+    inset -5px -5px 5px rgba(35, 227, 254, 0.2);
+    /* inset 5px 5px 5px rgb(0, 0, 0, 0.2);  */
 }
 
 .backdrop {

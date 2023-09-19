@@ -1,8 +1,8 @@
 <template>
-  <div v-if="errorMsg">
-    <p style="color:red; padding:10px">{{ errorMsg }}</p>
-  </div>
   <form class="form" @submit.prevent="handleLogin">
+    <div v-if="errorMsg">
+      <p style="color:red; padding:10px">{{ errorMsg }}</p>
+    </div>
     <input class="text-input" v-model="email" placeholder="Enter your email" />
     <input class="text-input" v-model="password" placeholder="Enter your password" />
     <input class="text-input" v-model="confirmPassword" placeholder="Confirm your password" />
@@ -31,10 +31,10 @@ export default {
   },
   methods: {
     async handleLogin() {
-      if (this.password == this.confirmPassword){
+      if (this.password == this.confirmPassword) {
         try {
           this.loading = true;
-          const { data, error } = await supabase.auth.signUp({ email: this.email, password: this.password});
+          const { data, error } = await supabase.auth.signUp({ email: this.email, password: this.password });
           if (error) throw error;
         } catch (error) {
           this.errorMsg = error.message;
@@ -43,12 +43,12 @@ export default {
           }, 4000);
         } finally {
           this.loading = false;
-        }        
+        }
       } else {
         this.errorMsg = "Passwords do not match";
-          setTimeout(() => {
-            this.errorMsg = null;
-          }, 4000);
+        setTimeout(() => {
+          this.errorMsg = null;
+        }, 4000);
       }
 
     },
@@ -61,20 +61,20 @@ export default {
   height: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: space-around;
   flex-direction: column;
   /* border-color: #fff;
   border-style: solid; */
 }
 
 .text-input {
-
   display: inline-block;
   outline: none;
   font-size: 10px;
   line-height: 1;
   border-radius: 500px;
-  border: 1px solid transparent;
+  /* border: 1px solid transparent; */
+  border-style: none;
   letter-spacing: 2px;
   min-width: 160px;
   /* text-transform: uppercase; */
@@ -83,10 +83,15 @@ export default {
   text-align: center;
   padding: 16px 14px 18px;
   color: #fff;
-  box-shadow: inset 0 0 0 2px #fff;
-  background-color: transparent;
+  /* box-shadow: inset 0 0 0 2px #fff; */
+  /* background-color: transparent; */
+  background-color: #1e1e1e;
   /* background-color: #1e1e1e; */
   height: 48px;
-
+  box-shadow:
+    /* -5px -5px 5px rgba(70, 70, 70, 0.1),
+    5px 5px 5px rgb(0, 0, 0, 0.2), */
+    inset -5px -5px 5px rgba(70, 70, 70, 0.1),
+    inset 5px 5px 5px rgb(0, 0, 0, 0.2);
 }
 </style>
