@@ -1,14 +1,15 @@
 <template>
-    <AddHabit v-if="showAddHabitMenu" @closeAddHabit="toggleAddHabitMenu" v-bind:date="day.date"/>
+    <AddHabit v-if="showAddHabitMenu" @closeAddHabit="toggleAddHabitMenu" v-bind:date="day.date" />
     <div :class="borderClass" class="flex-display" @mouseover="hover = true" @mouseleave="hover = false">
-        <p style="color: #529955">{{ formattedDate }}</p>
+
         <div v-if="hover" class="plus-background" @click="toggleAddHabitMenu">+</div>
+
+        <p style="color: #529955">{{ formattedDate }}</p>
         <div style="overflow:hidden;">
             <p v-for="st in singleTasksList" style="text-overflow: ellipsis; white-space: nowrap;">{{ st }}</p>
         </div>
-
         <div :class="scoreClass">
-            <p v-if="dateType != 'future'">{{ day.percentage }}%</p>
+            <p v-if="dateType != 'future'">{{ dayPercentage }}%</p>
         </div>
     </div>
 </template>
@@ -33,11 +34,12 @@ export default {
     methods: {
         toggleAddHabitMenu() {
             this.showAddHabitMenu = !this.showAddHabitMenu;
+            console.log(this.day.date)
         },
     },
     computed: {
         formattedDate() {
-            const parsedDate = dayjs(this.day.date, 'YYYY-MM-DD');
+            const parsedDate = dayjs(this.day.date);
             return parsedDate.format('DD/MM');
         },
         dateType() {
@@ -61,22 +63,41 @@ export default {
         },
         scoreClass() {
             if (this.dateType == 'future') return 'score-none'
-            else if (this.day.percentage >= 75) return 'score-green'
-            else if (this.day.percentage >= 50) return 'score-yellow'
+            else if (this.dayPercentage >= 75) return 'score-green'
+            else if (this.dayPercentage >= 50) return 'score-yellow'
             else return 'score-red'
         },
         singleTasksList() {
             let result = [];
             this.day.tasks.forEach((task) => {
                 if (task.type === "ON_DATE" || task.type === "UNTIL_DATE") {
-                    if (task.executions.length === 1)
+                    if (task.executions !== undefined)
                         result.push(task.name);
                 }
-
-
             })
             return result;
-        }
+        },
+        dayPercentage() {       
+            let doneTasks = 0;
+            let totalTasks = 0;
+            this.day.tasks.forEach((task) => {
+                if (task.type === "REGULAR"){
+                    totalTasks++;
+                    if(task.executions !== undefined) doneTasks++;
+                } 
+                if (task.type === "UNTIL_DONE" && task.executions !== undefined) {
+                    totalTasks++;
+                    doneTasks++;
+                }
+                if (task.type === "ON_DATE") {
+                    if (task.executions !== undefined) {
+                        totalTasks++;
+                        if (task.executions.is_done) doneTasks++;
+                    }
+                }
+            });
+            return totalTasks > 0 ? ((doneTasks * 1.0 / totalTasks) * 100 | 0) : 100;
+        },
     }
 };
 </script>
@@ -136,7 +157,7 @@ export default {
     flex-direction: column;
     justify-content: space-between;
     width: 100%;
-    position:relative;
+    position: relative;
 }
 
 .today-border {

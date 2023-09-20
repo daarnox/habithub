@@ -1,14 +1,14 @@
 <template>
   <li :class="{ 'toggle-completion': isBeingToggled }">
-    <button :disabled="disableToggle" @click.self="toggleTaskCompletion()" :class="{'task-completed': isCompleted }">
+    <button :disabled="disableToggle" @click.self="toggleTaskCompletion()" :class="{ 'task-important': isImportant, 'task-completed': isCompleted }">
       <!-- <span style="color:#dcdcaa">{{task.name}}</span>
         <span style="color:#c586c0">(</span>
         <span style="color:#9cdcfe">{{task.details}}</span>
         <span style="color:#c586c0">)</span> -->
-      <span v-if="isCompleted" style="text-decoration:none;">//</span>
-      {{ task.name }} ({{ task.description }})
+      
+      <span v-if="isCompleted" style="text-decoration:none;">//</span>{{ task.name }} ({{ task.description }})
     </button>
-    <Icon v-if="!isBeingToggled" icon="iconamoon:trash-duotone" @click="removeTask()" class="trash"/>
+    <Icon v-if="!isBeingToggled" icon="iconamoon:trash-duotone" @click="removeTask()" class="trash" />
     <Icon v-if="isBeingToggled" icon="icon-park-outline:back-one" @click="cancelToggle()" />
   </li>
 </template>
@@ -18,6 +18,7 @@ import { Icon } from '@iconify/vue';
 import { store } from '@/store/store';
 import { supabase } from '@/supabase';
 import dayjs from 'dayjs';
+import { isMemoSame } from 'vue';
 
 export default {
   name: "TaskItem",
@@ -42,12 +43,22 @@ export default {
       const differenceInDays = currentDate.diff(todaysDate, 'day');
       return (Math.abs(differenceInDays) > 1);
       //return false;
+    },
+    isImportant() {
+      // if (this.task.type === "REGULAR") {
+      //   const index = store.tasks.findIndex(task => task.name === this.task.name);
+      //   const task_executions = store.tasks[index];
+      //   index = task_executions.findIndex(dayjs(executions.date).isSame(dayjs(store.currentDisplayDate)));
+      //   if (index < 1) return true
+      //   else return task_executions[index-1].date 
+      // } else return false;
+      return false;
     }
   },
   methods: {
     async toggleTaskCompletion() {
       //need to pass a date to allow user switching days without waiting for a toggle to complete
-      const currentDate = store.currentDisplayDate; 
+      const currentDate = store.currentDisplayDate;
       if (this.isBeingToggled) this.cancelToggle();
       else {
         //TODO: delete cancelToggle and place all code here?
@@ -142,17 +153,21 @@ button:hover {
   color: white;
 }
 
+.task-important {
+  color:red;
+}
 .task-completed {
   text-decoration: line-through;
   color: #529955;
 }
+
 button:disabled {
   pointer-events: none;
   opacity: 0.3;
 }
-.trash:hover{
+
+.trash:hover {
   color: #c586c0;
 }
-
 </style>
 

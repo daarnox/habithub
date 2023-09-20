@@ -14,7 +14,7 @@
                 <option disabled value="0">Please select one</option>
                 <option value="REGULAR">regular</option>
                 <option value="ON_DATE">on date</option>
-                <option value="UNTIL_DATE">until date</option>
+                <!-- <option value="UNTIL_DATE">until date</option> -->
                 <option value="UNTIL_DONE">until done</option>
             </select>
             <!-- <input type="submit" class="button" :value="'Add Task'" /> -->

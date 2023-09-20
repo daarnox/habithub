@@ -16,13 +16,8 @@ export const store = reactive({
   currentDisplayDate: null,
   //list of filtered tasks accoring to currentDisplayDate
   currentDateTasks: [], //TODO: rename to currentDayData
-  //list of days and its data used in callendar
-  callendarDates: [],
   //used to check if data is ready to be used
   callendarDatesAreSet: false,
-
-  // new fields
-  currentCalendarDatesWithTasks: [],  // delete it???
 
   currentCalendarData: [],
 
@@ -44,7 +39,7 @@ export const store = reactive({
     this.todaysDate = dayjs().tz('Europe/Warsaw').format('YYYY-MM-DD');
     this.currentDisplayDate = dayjs(this.todaysDate).startOf('day').add(displayDateOffset, 'day').toISOString();
   },
-  //TODO: explain in comment better
+  //TODO: better comments
   processDayData(data) {
     return data.filter(task => {
       if (task.executions != null) {
@@ -57,7 +52,6 @@ export const store = reactive({
       else if (task.type === "UNTIL_DONE") return (task.keep_on || task.executions)
       else if (task.type === "ON_DATE") return task.executions
       else if (task.type === "UNTIL_DATE") {
-        //TODO: would it work properly in calendar use case?
         if (task.executions) {
           //TODO send update?
           task.keep_on == false;
@@ -69,7 +63,6 @@ export const store = reactive({
         return false;
       }
     });
-
   },
   async retrieveCurrentDayData(offset = 0) {
     this.currentDateTasks = [];
@@ -107,47 +100,20 @@ export const store = reactive({
     else {
       //create empty list of 21 days and fill it
       this.tasks = data;  //TODO: handle this differently
-      const firstDay = dayjs(this.currentDisplayDate).startOf('week').subtract(6, 'day');
+      const firstDay = dayjs(this.todaysDate).startOf('week').subtract(6, 'day');
       for (let i = 0; i < 21; i++) { // 21 days for 3 weeks
-        const date = firstDay.add(i, 'day').format('YYYY-MM-DD');
-        this.currentCalendarData.push({ date: date, tasks: [], percentage: 0 });  //TODO: organize differently
-      }
-      //fill the list
-      this.currentCalendarData.forEach((day, index) => {
+        const date = firstDay.add(i, 'day');
         // get temp tasks list with only executions for particular day
         let temp = data.map(task => {
           let task_copy = { ...task };
           task_copy.executions = task.executions.filter(ex => {
-            return dayjs(ex.task_date, 'YYYY-MM-DD').isSame(dayjs(day.date, 'YYYY-MM-DD'), 'day');
+            return dayjs(ex.task_date, 'YYYY-MM-DD').isSame(dayjs(date, 'YYYY-MM-DD'), 'day');
           });
           return task_copy;
         });
-        // TODO: processDayData(temp) ??
-        // temp.forEach(t => console.log(t.executions == null))
-        // console.log(temp);
-        //temp = this.processDayData(temp);
-        this.currentCalendarData[index] = { ...day, tasks: temp };
-      });
-      //TODO: move this code to dayframe
-      //calculate percentage for each day
-      this.currentCalendarData.forEach((day, index) => {
-        let doneTasks = 0;
-        let totalTasks = 0;
-        day.tasks.forEach((task) => {
-          if (task.type === "REGULAR") totalTasks++;
-          if (task.type === "REGULAR" && task.executions.length === 1) doneTasks++;
-          //if (task.type === "on_date" && task.executions != null) doneTasks++;
-          //TODO: rest of task types cases
-          if (task.type === "ON_DATE") {
-            if (task.executions.length === 1) {
-              totalTasks++;
-              if (task.executions[0].is_done) doneTasks++;
-            }
-          }
-        });
-        const percentage = totalTasks > 0 ? ((doneTasks * 1.0 / totalTasks) * 100 | 0) : 100;
-        this.currentCalendarData[index] = { ...day, percentage: percentage };
-      });
+        temp = this.processDayData(temp);
+        this.currentCalendarData.push({ date: date, tasks: temp });  //TODO: organize differently
+      }
       this.callendarDatesAreSet = true;
     }
   },
@@ -168,16 +134,12 @@ export const store = reactive({
       //console.log(data[0]);
       if (error != null) console.log(error.message);
       else execution.push(data[0]);
-      //console.log(error)
-      //console.log(execution);
     }
     //retrieve insterted task in order to get its database id
     this.tasks.push({ ...data[0], executions: execution });
-    this.currentDateTasks.push({ ...data[0], executions: execution[0] });
+    if (dayjs(date).isSame(dayjs(this.currentDisplayDate)) || task.type === "UNTIL_DONE" || task.type === "REGULAR")
+      this.currentDateTasks.push({ ...data[0], executions: execution[0] });
     //update callendar singleTasks list
-    //this.setCallendarDates();
-    //is this one necessary?
-    //this.retreiveData();
     this.retrieveCurrentCalendarData();
 
 
@@ -218,7 +180,7 @@ export const store = reactive({
   async removeTask(task) {
     this.tasks = this.tasks.filter(t => t.id != task.id);
     this.currentDateTasks = this.currentDateTasks.filter(t => t.id != task.id);
-    // TODO: try catch block?????
+    // TODO: try catch blocks
     const { error } = await supabase.from('tasks').delete().eq('id', task.id);
     if (error != null) console.log(error.message);
     //update callendar singleTasks list
