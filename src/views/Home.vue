@@ -5,7 +5,7 @@
         <div style="flex: 1; background-color: none;">
         </div>
         <div style="background-color: none;">
-          <h1>hello {{userName}}, welcome to home page:</h1>
+          <h1>hello {{ userName }}, welcome to home page:</h1>
         </div>
         <div style="flex: 1;  background-color: none;">
         </div>
@@ -16,7 +16,8 @@
           <h1 style="color:#9cdcfe">//future feature</h1>
         </div>
         <div class="part" style="float: right;">
-          <h1 style="color:#9cdcfe">//future feature</h1>
+          <!-- <h1 style="color:#9cdcfe">//future feature</h1> -->
+          <Forest></Forest>          
         </div>
       </div>
     </div>
@@ -28,9 +29,12 @@ import { supabase } from '@/supabase';
 import { store } from '@/store/store'
 import { computed } from 'vue';
 
+import Forest from '@/components/forest/Forest.vue'
+
 export default {
   name: 'HomeView',
   components: {
+    Forest
   },
   data() {
     return {
@@ -42,7 +46,7 @@ export default {
       if (store.user != null) {
         const fullEmail = store.user.email;
         const parts = fullEmail.split("@");
-        const userName= parts[0];
+        const userName = parts[0];
         return userName;
       }
     }
@@ -70,8 +74,10 @@ export default {
   border-radius: 40px;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: center;
+  align-items: center;
   border-color: #2b2b2b;
   border-style: solid;
 }
+
 </style>
