@@ -53,6 +53,6 @@ export default {
     5px 5px 5px rgb(0, 0, 0, 0.2),
     inset -5px -5px 5px rgba(70, 70, 70, 0.1),
     inset 5px 5px 5px rgb(0, 0, 0, 0.2); 
-  color: #529955;
+  color: var(--mainColor);
 }
 </style>

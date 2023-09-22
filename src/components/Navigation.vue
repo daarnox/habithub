@@ -6,7 +6,7 @@
                 <li><router-link class="link" to="/">home.js</router-link></li>
                 <li><router-link class="link" :to="{ name: 'habits' }">habits.js</router-link></li>
                 <li><router-link class="link" :to="{ name: 'summary' }">summary.js</router-link></li>
-                <button class="link" style="border:none; font-family: consolas; color:#529955" @click="handleLogOut()">logout.js</button>
+                <button class="link" style="border:none; font-family: consolas; color:var(--mainColor)" @click="handleLogOut()">logout.js</button>
             </ul>
         </nav>
     </header>
@@ -41,12 +41,12 @@ nav {
     margin: 0 auto;
     /* border-image: linear-gradient(to right, #006466,#4d194d) 1; */
     border-bottom: 2px solid transparent;
-    border-image: linear-gradient(to right, #529955, #1e1e1e) 1;
+    border-image: linear-gradient(to right, var(--mainColor), #1e1e1e) 1;
 }
 
 .title {
     padding-left: 20px;
-    color: #529955;
+    color: var(--mainColor);
     align-self: center;
     font-size: 30px;
     font-weight: 200;

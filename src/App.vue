@@ -14,6 +14,9 @@ import Authentication from '@/components/authentication/Authentication.vue'
 import {supabase} from './supabase'
 import {store} from '@/store/store'
 
+import '@/styles.css';
+
+
 export default {
   name: 'HomeView',
   components: {
@@ -61,7 +64,7 @@ export default {
   min-height: 100vh;
   /* position: relative; */
   /* background: linear-gradient(45deg, #212f45 20%, #1b3a4b 20% 40%, #212f45 40% 60%, #272640 60% 80%, #312244 80%); */
-  background: linear-gradient(45deg, #182e19 20%, #202020 20% 80%, #182e19 80%);
+  background: linear-gradient(45deg, var(--mainDarkColor) 20%, #202020 20% 80%, var(--mainDarkColor) 80%);
   /* animation: mymove 5s infinite alternate; */  
 }
 

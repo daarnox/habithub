@@ -13,11 +13,24 @@
 
       <div class="main-part" style="height: 100%;">
         <div class="part" style="float: left;">
-          <h1 style="color:#9cdcfe">//future feature</h1>
+          <h1 style="margin: 10px; color:var(--mainColor)">//options:</h1>
+          <div class="cont">
+            <div style="display:flex; align-items: center;">
+              <label for="allowUpdates" style="padding: 20px;" > allow every day updates</label>                 
+              <input type="checkbox" id="allowUpdates" v-model="store.allowUpdates"/>
+
+              <!-- <p v-if="store.allowUpdates">test</p> -->
+            </div>
+            <div style="display:flex; align-items: center;">
+              <label for="chosenStyle" style="padding: 20px;"> toggle page style</label><br>                  
+              <input type="checkbox" id="chosenStyle" @click="changeCssStyle" :checked="store.changedStyle"/>
+            </div>
+          </div>
         </div>
         <div class="part" style="float: right;">
+          <h1 style="margin: 10px; color:var(--mainColor)">//forest:</h1>
           <!-- <h1 style="color:#9cdcfe">//future feature</h1> -->
-          <Forest></Forest>          
+          <Forest></Forest>
         </div>
       </div>
     </div>
@@ -39,6 +52,8 @@ export default {
   data() {
     return {
       store,
+      allowUpdates: false,
+      changeStyle: false,
     }
   },
   computed: {
@@ -49,6 +64,19 @@ export default {
         const userName = parts[0];
         return userName;
       }
+    },
+  },
+  methods:{
+    changeCssStyle(){
+      var r = document.querySelector(':root');      
+      if(store.changedStyle) {
+        r.style.setProperty('--mainColor', '#529955');
+        r.style.setProperty('--mainDarkColor', '#182e19');        
+      }else{
+        r.style.setProperty('--mainColor', '#9cdcfe');
+        r.style.setProperty('--mainDarkColor', '#1e2c33');
+      }
+      store.changedStyle = !store.changedStyle;
     }
   }
 }
@@ -65,6 +93,20 @@ export default {
   justify-content: start;
 }
 
+.cont {
+
+  /* background-color: yellow; */
+  height: 100%;
+  width: 100%;
+  border-radius: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* border-color: #2b2b2b;
+border-style: solid; */
+}
+
 .part {
   float: left;
   width: 48%;
@@ -78,6 +120,44 @@ export default {
   align-items: center;
   border-color: #2b2b2b;
   border-style: solid;
+  /* position: relative; */
 }
+
+input[type="checkbox"]{
+  position:relative;
+  width: 60px;
+  height: 30px;
+  -webkit-appearance: none;
+  background: #252525;
+  outline:none;
+  border-radius:20px;
+  box-shadow: inset 0 0 5px rgba(0,0,0,.2);
+  transition: .5s;
+}
+
+input[type="checkbox"]:checked{
+  background: #2b2b2b;
+}
+
+input[type="checkbox"]:before{
+  content: '';
+  position: absolute;
+  width: 27px;
+  height: 27px;
+  border-radius: 20px;
+  top: 0;
+  left: 0;
+  background: #919191;
+  /* transform: scale(1.1); */
+  box-shadow: 0 2px 5px rgba(0,0,0,.2);
+  transition: .5s;
+}
+
+input:checked[type="checkbox"]:before{
+  left: 32px;
+  background: var(--mainColor);
+  transform: scale(1.1);
+}
+
 
 </style>

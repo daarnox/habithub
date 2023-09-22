@@ -96,7 +96,7 @@ export default {
   align-items: center;
   justify-content: space-evenly;
   flex-direction: column;
-  border-color: #529955;
+  border-color: var(--mainColor);
   border-style: solid;
 
   box-shadow:

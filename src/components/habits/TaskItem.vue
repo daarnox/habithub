@@ -41,7 +41,8 @@ export default {
       const currentDate = dayjs(store.currentDisplayDate);
       const todaysDate = dayjs(store.todaysDate);
       const differenceInDays = currentDate.diff(todaysDate, 'day');
-      return (Math.abs(differenceInDays) > 1);
+      if (store.allowUpdates) return false;
+      else return (Math.abs(differenceInDays) > 1);
       //return false;
     },
     isImportant() {
@@ -146,7 +147,7 @@ button {
 
 button:hover {
   /* color: #d7ba7d; */
-  color: #529955;
+  color: var(--mainColor);
 }
 
 .task-completed:hover {
@@ -158,7 +159,7 @@ button:hover {
 }
 .task-completed {
   text-decoration: line-through;
-  color: #529955;
+  color: var(--mainColor);
 }
 
 button:disabled {

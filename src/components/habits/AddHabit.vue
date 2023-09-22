@@ -83,7 +83,7 @@ export default {
     align-items: center;
     justify-content: space-evenly;
     flex-direction: column;
-    border-color: #529955;
+    border-color: var(--mainColor);
     border-style: solid;
     box-shadow:
     /* -5px -5px 5px rgba(255, 0, 191, 0.5), */

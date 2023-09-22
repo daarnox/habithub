@@ -28,6 +28,7 @@
 
         <div class="dirt">
             <div class="grass">
+                <!-- <span style="overflow-wrap: break-word; font-size:8px; color:#1f1206; font-weight: bold;">Lorem ipsum dolor situm amet etsum, consectetur adipiscing</span> -->
                 <span></span>
             </div>
             <div class="middle">
@@ -35,6 +36,10 @@
                 <span style="--i:1;"></span>
                 <span style="--i:2;"></span>
                 <span style="--i:3;"></span>
+                <!-- <span style="--i:0; color:#529955">//////</span>
+                <span style="--i:1; color:#529955">//////</span>
+                <span style="--i:2; color:#529955">//////</span>
+                <span style="--i:3; color:#529955">//////</span> -->
             </div>
         </div>
 

@@ -1,6 +1,6 @@
 <template>
   <div class="cont">
-    <h1 style="margin: 10px; color:#529955">//forest:</h1>
+    <!-- <h1 style="margin: 10px; color:#529955">//forest:</h1> -->
     <div class="forest">
       <Tree v-for="n in 25" v-bind:displayTree="n % 6 == 2 || n === 16 || n === 1" v-bind:xPosition="(n - 1) % 5"
         v-bind:yPosition="Math.floor((n - 1) / 5)"></Tree>
@@ -35,8 +35,8 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-color: #2b2b2b;
-  border-style: solid;
+  /* border-color: #2b2b2b;
+  border-style: solid; */
 }
 
 

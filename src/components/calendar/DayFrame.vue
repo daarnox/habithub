@@ -4,7 +4,7 @@
 
         <div v-if="hover" class="plus-background" @click="toggleAddHabitMenu">+</div>
 
-        <p style="color: #529955">{{ formattedDate }}</p>
+        <p style="color: var(--mainColor)">{{ formattedDate }}</p>
         <div style="overflow:hidden;">
             <p v-for="st in singleTasksList" style="text-overflow: ellipsis; white-space: nowrap;">{{ st }}</p>
         </div>
@@ -34,7 +34,6 @@ export default {
     methods: {
         toggleAddHabitMenu() {
             this.showAddHabitMenu = !this.showAddHabitMenu;
-            console.log(this.day.date)
         },
     },
     computed: {
@@ -110,7 +109,7 @@ export default {
     /* top: 50px; */
     background: rgba(0, 0, 0, 0.35);
     /* border: solid #9cdcfe; */
-    color: #529955;
+    color: var(--mainColor);
     border-width: 2px 2px 2px 2px;
     width: 100%;
     height: 100%;
@@ -188,7 +187,7 @@ export default {
 
 .day-frame:hover {
     background-color: #1e1e1e;
-    border-color: #529955;
+    border-color: var(--mainColor);
     /* border: solid 
     border-width: 2px 2px 2px 2px; */
 }

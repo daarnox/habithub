@@ -21,6 +21,9 @@ export const store = reactive({
 
   currentCalendarData: [],
 
+  allowUpdates: false,
+  changedStyle: false,
+
   setUser(session) {
     this.user = session ? session.user : null;
     //TODO: set current date here???? or maybe better just delete line below
@@ -137,12 +140,11 @@ export const store = reactive({
     }
     //retrieve insterted task in order to get its database id
     this.tasks.push({ ...data[0], executions: execution });
-    if (dayjs(date).isSame(dayjs(this.currentDisplayDate)) || task.type === "UNTIL_DONE" || task.type === "REGULAR")
+    if (task.type === "UNTIL_DONE" || task.type === "REGULAR" || dayjs(date).isSame(dayjs(this.currentDisplayDate),'day'))
       this.currentDateTasks.push({ ...data[0], executions: execution[0] });
+
     //update callendar singleTasks list
     this.retrieveCurrentCalendarData();
-
-
   },
   async toggleTaskCompletion(task, currentDate) {
     // TODO try catch block??

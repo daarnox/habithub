@@ -1,5 +1,5 @@
 <template>
-  <AddHabit v-if="showAddHabitMenu" @closeAddHabit="toggleAddHabitMenu" />
+  <AddHabit v-if="showAddHabitMenu" @closeAddHabit="toggleAddHabitMenu" v-bind:date="currentDate" />
   <!-- @habitAdded="handleHabitAdded"/> -->
   <div class="view-container">
     <div class="container">
@@ -28,7 +28,7 @@
       <div class="main-part">
 
         <div class="left-part">
-          <h1 style="margin: 10px; color:#529955">//todo:</h1>
+          <h1 style="margin: 10px; color:var(--mainColor)">//todo:</h1>
           <div class="task-list">
             <ul>
               <TaskItem v-for="(task, index) in uncompletedTasks" :key="task.id" v-bind:task="task" />
@@ -37,7 +37,7 @@
         </div>
 
         <div class="right-part">
-          <h1 style="margin: 10px; color:#529955">//done:</h1>
+          <h1 style="margin: 10px; color:var(--mainColor)">//done:</h1>
           <div class="task-list">
             <ul>
               <TaskItem v-for="(task, index) in completedTasks" :key="task.id" v-bind:task="task" />
@@ -124,6 +124,9 @@ export default {
       else if (differenceInDays === 0) return 'todays'
       else if (differenceInDays === 1) return 'tomorrows'
       else return currentDate.format('DD/MM')
+    },
+    currentDate(){  //used only to pass date to add habit
+      return store.currentDisplayDate;
     }
 
   }
@@ -219,6 +222,6 @@ export default {
     5px 5px 5px rgb(0, 0, 0, 0.2),
     inset -5px -5px 5px rgba(70, 70, 70, 0.1),
     inset 5px 5px 5px rgb(0, 0, 0, 0.2); 
-  color: #529955;
+  color: var(--mainColor);
 }
 </style>
