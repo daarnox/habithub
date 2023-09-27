@@ -1,4 +1,5 @@
 <template>
+  <Timer v-if="showTimer" @closeTimer="toggleTimer" />
   <div class="view-container">
     <div class="container">
       <div class="top-part" style="display:flex; padding:50px;">
@@ -16,15 +17,19 @@
           <h1 style="margin: 10px; color:var(--mainColor)">//options:</h1>
           <div class="cont">
             <div style="display:flex; align-items: center;">
-              <label for="allowUpdates" style="padding: 20px;" > allow every day updates</label>                 
-              <input type="checkbox" id="allowUpdates" v-model="store.allowUpdates"/>
+              <label for="allowUpdates" style="padding: 20px;"> allow every day updates</label>
+              <input type="checkbox" id="allowUpdates" @click="toggleAllowUpdates" :checked="allowUpdates" />
 
               <!-- <p v-if="store.allowUpdates">test</p> -->
             </div>
             <div style="display:flex; align-items: center;">
-              <label for="chosenStyle" style="padding: 20px;"> toggle page style</label><br>                  
-              <input type="checkbox" id="chosenStyle" @click="changeCssStyle" :checked="store.changedStyle"/>
+              <label for="chosenStyle" style="padding: 20px;"> toggle page style</label><br>
+              <input type="checkbox" id="chosenStyle" @click="changeCssStyle" :checked="chosenStyle" />
             </div>
+            <!-- temporary toggle timer button -->
+            <FormButton class="button" @click="toggleTimer">
+              start timer
+            </FormButton>
           </div>
         </div>
         <div class="part" style="float: right;">
@@ -43,40 +48,68 @@ import { store } from '@/store/store'
 import { computed } from 'vue';
 
 import Forest from '@/components/forest/Forest.vue'
+import Timer from '@/components/forest/Timer.vue';
+import FormButton from '@/components/user_interface/FormButton.vue'
 
 export default {
   name: 'HomeView',
   components: {
-    Forest
-  },
+    Forest,
+    Timer,
+    FormButton
+},
   data() {
     return {
       store,
-      allowUpdates: false,
-      changeStyle: false,
+      showTimer: false,
     }
   },
   computed: {
     userName() {
       if (store.user != null) {
         const fullEmail = store.user.email;
-        const parts = fullEmail.split("@");
-        const userName = parts[0];
+        const userName = fullEmail.split("@")[0];
         return userName;
       }
     },
-  },
-  methods:{
-    changeCssStyle(){
-      var r = document.querySelector(':root');      
-      if(store.changedStyle) {
-        r.style.setProperty('--mainColor', '#529955');
-        r.style.setProperty('--mainDarkColor', '#182e19');        
-      }else{
-        r.style.setProperty('--mainColor', '#9cdcfe');
-        r.style.setProperty('--mainDarkColor', '#1e2c33');
+    allowUpdates(){
+      if(store.userData != null){
+        return store.userData.allow_updates;
       }
-      store.changedStyle = !store.changedStyle;
+    },
+    chosenStyle(){
+      if(store.userData != null)
+        return store.userData.chosen_style;
+    }
+  },
+  methods: {
+    async toggleAllowUpdates(){
+      const { data, error } = await supabase.from('users')
+      .update({ allow_updates: !store.userData.allow_updates})
+      .eq('id', store.user.id).select();
+      //TODO: confirm sending a request
+      store.userData = data[0];
+
+    },
+    async changeCssStyle() {
+
+      const { data, error } = await supabase.from('users')
+      .update({ chosen_style: !store.userData.chosen_style})
+      .eq('id', store.user.id).select();
+      //TODO: confirm sending a request
+      store.userData = data[0];
+
+      // var r = document.querySelector(':root');
+      // if (store.userData.chosen_style) {
+      //   r.style.setProperty('--mainColor', '#9cdcfe');
+      //   r.style.setProperty('--mainDarkColor', '#1e2c33');        
+      // } else {
+      //   r.style.setProperty('--mainColor', '#529955');
+      //   r.style.setProperty('--mainDarkColor', '#182e19');
+      // }
+    },
+    toggleTimer() {
+      this.showTimer = !this.showTimer;
     }
   }
 }
@@ -123,23 +156,23 @@ border-style: solid; */
   /* position: relative; */
 }
 
-input[type="checkbox"]{
-  position:relative;
+input[type="checkbox"] {
+  position: relative;
   width: 60px;
   height: 30px;
   -webkit-appearance: none;
   background: #252525;
-  outline:none;
-  border-radius:20px;
-  box-shadow: inset 0 0 5px rgba(0,0,0,.2);
+  outline: none;
+  border-radius: 20px;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, .2);
   transition: .5s;
 }
 
-input[type="checkbox"]:checked{
+input[type="checkbox"]:checked {
   background: #2b2b2b;
 }
 
-input[type="checkbox"]:before{
+input[type="checkbox"]:before {
   content: '';
   position: absolute;
   width: 27px;
@@ -149,15 +182,13 @@ input[type="checkbox"]:before{
   left: 0;
   background: #919191;
   /* transform: scale(1.1); */
-  box-shadow: 0 2px 5px rgba(0,0,0,.2);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, .2);
   transition: .5s;
 }
 
-input:checked[type="checkbox"]:before{
+input:checked[type="checkbox"]:before {
   left: 32px;
   background: var(--mainColor);
   transform: scale(1.1);
 }
-
-
 </style>

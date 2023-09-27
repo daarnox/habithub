@@ -41,6 +41,7 @@
                 <span style="--i:2; color:#529955">//////</span>
                 <span style="--i:3; color:#529955">//////</span> -->
             </div>
+         <span class="shadow"></span>           
         </div>
 
     </div>
@@ -139,10 +140,9 @@ export default {
     width: 100%;
     height: 100%;
     /* background: #0002; */
-    background: red;
-    ;
+    background: var(--mainDarkColor);
     transform-style: preserve-3d;
-    transform: rotateX(90deg) translateZ(-94px);
+    transform: translateY(180px);
     filter: blur(20px);
 }
 

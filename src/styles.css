@@ -1,6 +1,27 @@
 :root {
-     --mainColor: #529955; 
-    --mainDarkColor: #182e19;
-    /* --mainColor: #9cdcfe;
+  --mainColor: #529955;
+  --mainDarkColor: #182e19;
+  /* --mainColor: #9cdcfe;
     --mainDarkColor: #1e2c33; */
+}
+
+.block {
+  position: absolute;
+  width: 2px;
+  height: 15px;
+  background: var(--mainColor);
+  left: 50%;
+  transform-origin: 50% 150px;
+  /* transform: rotate(25deg); */
+  opacity: 0;
+  animation: animate 0.1s linear forwards;
+
+  box-shadow: 0 0 15px var(--mainColor), 0 0 30px var(--mainColor);
+}
+
+@keyframes animate {
+  to {
+    opacity: 1;
   }
+
+}

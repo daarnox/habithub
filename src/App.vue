@@ -1,18 +1,18 @@
 <template>
-    <!-- <Auth v-if="!userLoggedIn" @userLoggedIn="simulateLoggingIn"/> -->
-    <Authentication v-if="!userLoggedIn"/>
-    <div v-else>
-      <Navigation/>
-      <router-view/>    
-    </div> 
+  <!-- <Auth v-if="!userLoggedIn" @userLoggedIn="simulateLoggingIn"/> -->
+  <Authentication v-if="!userLoggedIn" />
+  <div v-else>
+    <Navigation />
+    <router-view />
+  </div>
 </template>
 
 <script>
 
 import Navigation from '@/components/Navigation.vue'
 import Authentication from '@/components/authentication/Authentication.vue'
-import {supabase} from './supabase'
-import {store} from '@/store/store'
+import { supabase } from './supabase'
+import { store } from '@/store/store'
 
 import '@/styles.css';
 
@@ -23,13 +23,13 @@ export default {
     Navigation,
     Authentication
   },
-    data(){
+  data() {
     return {
       userLoggedIn: false,
       store,
     }
   },
-  created(){
+  created() {
     const user = supabase.auth.getUser()
     supabase.auth.onAuthStateChange((_, session) => {
       store.setUser(session);
@@ -37,26 +37,50 @@ export default {
       this.userLoggedIn = (store.user != null);
     });
   },
+  computed: {
+    changeClass() {
+      if (store.userData != null) {
+        return store.userData.chosen_style;
+      } else return false;
+    }
+  },
   methods: {
-      // simulateLoggingIn(){
-      //   this.userLoggedIn = true;
-      // }
+    // simulateLoggingIn(){
+    //   this.userLoggedIn = true;
+    // }
+  },
+  watch: {
+    changeClass(newChangeClass, oldChangeClass) {
+      if (newChangeClass) {
+        document.body.style.setProperty('--mainColor', '#9cdcfe');
+        document.body.style.setProperty('--mainDarkColor', '#1e2c33');
+      } else {
+        document.body.style.setProperty('--mainColor', '#529955');
+        document.body.style.setProperty('--mainDarkColor', '#182e19');
+      }
     },
 
+    //   r.style.setProperty('--mainColor', '#9cdcfe');
+    //   r.style.setProperty('--mainDarkColor', '#1e2c33');        
+    // } else {
+    //   r.style.setProperty('--mainColor', '#529955');
+    //   r.style.setProperty('--mainDarkColor', '#182e19');
+
+  }
 }
 </script>
 
 
 <style>
-
 * {
   padding: 0;
   margin: 0;
-  box-sizing: border-box;  /* include the padding and border in an element's total width */
+  box-sizing: border-box;
+  /* include the padding and border in an element's total width */
 }
 
 #app {
-    /* -webkit-font-smoothing: antialiased;
+  /* -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; */
   font-family: Consolas, Avenir, Helvetica, Arial, sans-serif;
   text-align: center;
@@ -65,7 +89,7 @@ export default {
   /* position: relative; */
   /* background: linear-gradient(45deg, #212f45 20%, #1b3a4b 20% 40%, #212f45 40% 60%, #272640 60% 80%, #312244 80%); */
   background: linear-gradient(45deg, var(--mainDarkColor) 20%, #202020 20% 80%, var(--mainDarkColor) 80%);
-  /* animation: mymove 5s infinite alternate; */  
+  /* animation: mymove 5s infinite alternate; */
 }
 
 /* @keyframes mymove {
@@ -73,7 +97,7 @@ export default {
   to {background: #312244}
 } */
 
-.view-container{
+.view-container {
   border-bottom-left-radius: 25px;
   border-bottom-right-radius: 25px;
   margin: auto;
@@ -85,5 +109,4 @@ export default {
   justify-content: center;
   padding: 30px;
 }
-
 </style>

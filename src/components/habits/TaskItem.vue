@@ -41,9 +41,10 @@ export default {
       const currentDate = dayjs(store.currentDisplayDate);
       const todaysDate = dayjs(store.todaysDate);
       const differenceInDays = currentDate.diff(todaysDate, 'day');
-      if (store.allowUpdates) return false;
-      else return (Math.abs(differenceInDays) > 1);
-      //return false;
+      if(store.userData != null){
+        if(store.userData.allow_updates === true) return false;
+      }
+      return (Math.abs(differenceInDays) > 1);
     },
     isImportant() {
       // if (this.task.type === "REGULAR") {

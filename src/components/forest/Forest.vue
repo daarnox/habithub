@@ -2,9 +2,11 @@
   <div class="cont">
     <!-- <h1 style="margin: 10px; color:#529955">//forest:</h1> -->
     <div class="forest">
-      <Tree v-for="n in 25" v-bind:displayTree="n % 6 == 2 || n === 16 || n === 1" v-bind:xPosition="(n - 1) % 5"
+    <!-- <div class="shadow">test</div>       -->
+      <Tree v-for="n in 25" v-bind:displayTree="trees.includes(n)" v-bind:xPosition="(n - 1) % 5"
         v-bind:yPosition="Math.floor((n - 1) / 5)"></Tree>
     </div>
+
 
 
   </div>
@@ -12,12 +14,24 @@
 
 <script>
 import Tree from './Tree.vue';
+import { store } from '@/store/store';
 
 export default {
   name: "Forest",
   components: {
     Tree
   },
+  data(){
+    return {
+
+    }
+  },
+  computed:{
+    trees(){
+      return store.trees;
+    }
+  }
+
 }
 
 </script>

@@ -4,10 +4,14 @@ import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 
+import { isProxy, toRaw } from 'vue';
+
 export const store = reactive({
 
-  //user session
+  //session user
   user: null,
+  //user data
+  userData: null,
   //all tasks with all executions
   tasks: [],
   //todays date
@@ -21,9 +25,58 @@ export const store = reactive({
 
   currentCalendarData: [],
 
-  allowUpdates: false,
-  changedStyle: false,
+  // allowUpdates: false,
+  // changedStyle: false,
 
+  trees: [],
+
+  async getUserData(){
+    const{ data, error } = await supabase.from('users').select(`
+      id, nickname, allow_updates, chosen_style`)
+      .eq('id', this.user.id);
+    if(data[0] == undefined){
+      const { data, error } = await supabase.from('users')
+      .insert({ id: this.user.id}).select();
+      this.userData = data[0];
+    } else {
+      this.userData = data[0];
+    }
+  },
+  async getTreeData(){
+    const{ data, error } = await supabase.from('forests').select(`
+      id, trees`)
+      .eq('id', this.user.id);
+    if(data[0] == undefined){
+      const { data, error } = await supabase.from('forests')
+      .insert({ id: this.user.id, trees: []}).select();
+      this.trees = toRaw(data[0].trees);
+    } else {
+      this.trees = toRaw(data[0].trees);
+    }
+  },
+
+  async addRandomTree(){
+    // console.log(typeof(this.trees))
+    const trees_copy = toRaw(this.trees);
+    console.log(trees_copy)
+    const allNumbers = Array.from({ length: 25 }, (_, i) => i + 1);
+    const availableNumbers = allNumbers.filter((num) => !trees_copy.includes(num));
+  
+    if (availableNumbers.length === 0) {
+      return;
+    }
+    const randomIndex = Math.floor(Math.random() * availableNumbers.length);
+    const randomNumber = availableNumbers[randomIndex];
+
+    this.trees.push(randomNumber);
+
+    const { data, error } = await supabase.from('forests')
+    .update({ trees: toRaw(this.trees)})
+    .eq('id', store.user.id).select();
+    //TODO: confirm sending a request
+    this.trees = toRaw(data[0].trees);
+    return;
+  },
   setUser(session) {
     this.user = session ? session.user : null;
     //TODO: set current date here???? or maybe better just delete line below
@@ -33,6 +86,8 @@ export const store = reactive({
       this.retrieveCurrentDayData();
       //this.retrieveCallendarData();
       this.retrieveCurrentCalendarData();
+      this.getUserData();
+      this.getTreeData();
     }
   },
   retreiveDate(displayDateOffset = 0) {
