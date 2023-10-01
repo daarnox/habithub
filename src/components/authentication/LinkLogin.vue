@@ -3,7 +3,7 @@
     <div v-if="errorMsg">
       <p style="color:red; padding:10px">{{ errorMsg }}</p>
     </div>
-    <input class="text-input" v-model="email" placeholder="Enter your email" />
+    <input type="email" class="text-input" v-model="email" placeholder="Enter your email" />
 
     <!-- <input type="submit" class="button" :value="loading ? 'Loading' : 'Send magic link'" :disabled="loading" /> -->
     <FormButton>Send magic link</FormButton>
@@ -63,6 +63,9 @@ export default {
   flex-direction: column;
   /* border-color: #fff;
   border-style: solid; */
+  /* text-overflow: ellipsis; 
+  white-space: nowrap; */
+  overflow: hidden;
 }
 
 .text-input {

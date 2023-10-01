@@ -1,11 +1,11 @@
 <template>
   <form class="form" @submit.prevent="handleLogin">
-    <div v-if="errorMsg">
-      <p style="color:red; padding:10px">{{ errorMsg }}</p>
+    <div v-if="errorMsg" style="overflow:hidden;">
+      <p style="color:red; padding:10px; text-overflow: ellipsis; white-space: nowrap;">{{ errorMsg }}</p>
     </div>
-    <input class="text-input" v-model="email" placeholder="Enter your email" />
-    <input class="text-input" v-model="password" placeholder="Enter your password" />
-    <input class="text-input" v-model="confirmPassword" placeholder="Confirm your password" />
+    <input type="email" class="text-input" v-model="email" placeholder="Enter your email" />
+    <input type="password" class="text-input" v-model="password" placeholder="Enter your password" />
+    <input type="password" class="text-input" v-model="confirmPassword" placeholder="Confirm your password" />
 
     <FormButton>Register</FormButton>
   </form>
@@ -65,6 +65,9 @@ export default {
   flex-direction: column;
   /* border-color: #fff;
   border-style: solid; */
+   overflow: hidden;
+  /*text-overflow: ellipsis; 
+  white-space: nowrap; */
 }
 
 .text-input {

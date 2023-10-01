@@ -3,8 +3,8 @@
     <div v-if="errorMsg">
       <p style="color:red; padding:10px">{{ errorMsg }}</p>
     </div>
-    <input class="text-input" v-model="email" placeholder="Enter your email" />
-    <input class="text-input" v-model="password" placeholder="Enter your password" />
+    <input type="email" class="text-input" v-model="email" placeholder="Enter your email" />
+    <input type="password" class="text-input" v-model="password" placeholder="Enter your password" />
 
     <FormButton>Log In</FormButton>
   </form>

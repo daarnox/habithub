@@ -3,6 +3,7 @@ import { supabase } from '@/supabase';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
+import mitt from "mitt";
 
 import { isProxy, toRaw } from 'vue';
 
@@ -25,8 +26,8 @@ export const store = reactive({
 
   currentCalendarData: [],
 
-  // allowUpdates: false,
-  // changedStyle: false,
+  // event emitter
+  emitter: mitt(),
 
   trees: [],
 
@@ -58,7 +59,7 @@ export const store = reactive({
   async addRandomTree(){
     // console.log(typeof(this.trees))
     const trees_copy = toRaw(this.trees);
-    console.log(trees_copy)
+    // console.log(trees_copy)
     const allNumbers = Array.from({ length: 25 }, (_, i) => i + 1);
     const availableNumbers = allNumbers.filter((num) => !trees_copy.includes(num));
   

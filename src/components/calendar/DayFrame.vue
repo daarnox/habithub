@@ -6,7 +6,7 @@
 
         <p style="color: var(--mainColor)">{{ formattedDate }}</p>
         <div style="overflow:hidden;">
-            <p v-for="st in singleTasksList" style="text-overflow: ellipsis; white-space: nowrap;">{{ st }}</p>
+            <p v-for="(st,index) in singleTasksList" v-bind:key="index" style="text-overflow: ellipsis; white-space: nowrap;">{{ st }}</p>
         </div>
         <div :class="scoreClass">
             <p v-if="dateType != 'future'">{{ dayPercentage }}%</p>

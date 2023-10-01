@@ -3,6 +3,7 @@
   <Authentication v-if="!userLoggedIn" />
   <div v-else>
     <Navigation />
+    <Timer/>
     <router-view />
   </div>
 </template>
@@ -14,6 +15,8 @@ import Authentication from '@/components/authentication/Authentication.vue'
 import { supabase } from './supabase'
 import { store } from '@/store/store'
 
+import Timer from "@/components/forest/Timer.vue";
+
 import '@/styles.css';
 
 
@@ -21,7 +24,8 @@ export default {
   name: 'HomeView',
   components: {
     Navigation,
-    Authentication
+    Authentication,
+    Timer
   },
   data() {
     return {
