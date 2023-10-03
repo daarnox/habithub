@@ -32,8 +32,11 @@ export default {
     },
     startTimer() {
 
+      const time = 10000;
+
       const rating = document.getElementsByClassName("rating")[0];
       rating.innerHTML = " ";
+      rating.innerHTML += "<h2 class='test'>chuj</h2>";
       rating.innerHTML += "<div class='block'></div>";
       const block = document.getElementsByClassName("block");
 
@@ -41,14 +44,30 @@ export default {
         rating.innerHTML += "<div class='block'></div>";
         // transform-origin: 50% 100px;
         block[i].style.transform = "rotate(" + 3.6 * i + "deg)";
-        block[i].style.animationDelay = `${i / 50}s`;
+        block[i].style.animationDelay = `${(i / 100) * (time / 1000)}s`;
       }
 
+      const counter = document.querySelector(".test");
+      counter.innerText = time / 1000 + 1;
+
+      const IncrementCounter = () => {
+        const value = +counter.innerText;
+        if (value > 0) {
+          counter.innerText = Math.ceil(value - 1);
+          setTimeout(() => {
+            IncrementCounter();
+          }, 1000);
+        }
+      };
+
+      IncrementCounter();
+
+      // this.displayTimer = false;
       setTimeout(() => {
         // console.log("test");
         store.addRandomTree();
         this.displayTimer = false;
-      }, 2500);
+      }, time + 1000);
     },
   },
   created() {
@@ -81,9 +100,10 @@ export default {
   border-color: var(--mainColor);
   border-style: solid;
   box-shadow:
-        /* -5px -5px 5px rgba(255, 0, 191, 0.5), */ -5px -5px 5px rgba(35, 227, 254, 0.3),
-    /* 5px 5px 5px rgb(0, 0, 0, 0.2), */ inset -5px -5px 5px
-      rgba(35, 227, 254, 0.2);
+    /* -5px -5px 5px rgba(255, 0, 191, 0.5), */
+    -5px -5px 5px rgba(35, 227, 254, 0.3),
+    /* 5px 5px 5px rgb(0, 0, 0, 0.2), */
+    inset -5px -5px 5px rgba(35, 227, 254, 0.2);
   /* inset 5px 5px 5px rgb(0, 0, 0, 0.2);  */
 }
 
@@ -113,37 +133,4 @@ export default {
   /* background: #500; */
 }
 
-.block {
-  position: absolute;
-  width: 2px;
-  height: 15px;
-  background: var(--mainColor);
-  left: 50%;
-  transform-origin: 50% 150px;
-  /* transform: rotate(25deg); */
-  animation: animate 0.1s linear forwards;
-}
-
-@keyframes animate {
-  to {
-    opacity: 1;
-  }
-}
-
-.card .rating h2 {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #fff;
-  font-size: 1.2em;
-  font-weight: 500;
-  text-align: center;
-  line-height: 1.5em;
-}
-
-.card .rating h2 span {
-  font-size: 2.5em;
-  font-weight: 700;
-}
 </style>

@@ -39,9 +39,6 @@
               />
             </div>
             <!-- temporary toggle timer button -->
-            <FormButton class="button" @click="toggleTimer">
-              start timer
-            </FormButton>
           </div>
         </div>
         <div class="part" style="float: right">
@@ -120,11 +117,11 @@ export default {
       //   r.style.setProperty('--mainDarkColor', '#182e19');
       // }
     },
-    toggleTimer() {
-      // this.showTimer = !this.showTimer;
-      // const emitter = mitt();
-      store.emitter.emit("showTimer", { a: "test" });
-    },
+    // toggleTimer() {
+    //   // this.showTimer = !this.showTimer;
+    //   // const emitter = mitt();
+    //   store.emitter.emit("showTimer", { a: "test" });
+    // },
   },
   mounted() {
 

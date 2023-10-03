@@ -31,38 +31,48 @@ export const store = reactive({
 
   trees: [],
 
-  async getUserData(){
-    const{ data, error } = await supabase.from('users').select(`
+  async getUserData() {
+    const { data, error } = await supabase.from('users').select(`
       id, nickname, allow_updates, chosen_style`)
       .eq('id', this.user.id);
-    if(data[0] == undefined){
+    if (data[0] == undefined) {
       const { data, error } = await supabase.from('users')
-      .insert({ id: this.user.id}).select();
+        .insert({ id: this.user.id }).select();
       this.userData = data[0];
     } else {
       this.userData = data[0];
     }
   },
-  async getTreeData(){
-    const{ data, error } = await supabase.from('forests').select(`
-      id, trees`)
-      .eq('id', this.user.id);
-    if(data[0] == undefined){
+  async getTreeData() {
+
+    const date = dayjs(this.todaysDate).startOf('day').add(0, 'day').toISOString();
+
+    const { data, error } = await supabase.from('forests').select(`
+      user_id, trees, date`)
+      .eq('user_id', this.user.id)
+      .eq('date', date);
+    // console.log(data[0])
+    if(data[0] == null){
+      console.log("przeszlo" + date)
       const { data, error } = await supabase.from('forests')
-      .insert({ id: this.user.id, trees: []}).select();
+      .insert({ user_id: this.user.id, trees: [], date: date}).select();
+      console.log(error)
       this.trees = toRaw(data[0].trees);
     } else {
       this.trees = toRaw(data[0].trees);
     }
   },
 
-  async addRandomTree(){
+  async addRandomTree() {
+
+    const date = dayjs(this.todaysDate).startOf('day').add(0, 'day').toISOString();
+
     // console.log(typeof(this.trees))
     const trees_copy = toRaw(this.trees);
     // console.log(trees_copy)
     const allNumbers = Array.from({ length: 25 }, (_, i) => i + 1);
     const availableNumbers = allNumbers.filter((num) => !trees_copy.includes(num));
-  
+
     if (availableNumbers.length === 0) {
       return;
     }
@@ -72,8 +82,12 @@ export const store = reactive({
     this.trees.push(randomNumber);
 
     const { data, error } = await supabase.from('forests')
-    .update({ trees: toRaw(this.trees)})
-    .eq('id', store.user.id).select();
+      .update({ trees: toRaw(this.trees) })
+      .eq('user_id', store.user.id)     
+      .eq ('date', date).select();
+
+      if (error != null) console.log(error2.message);
+      // console.log("???????")
     //TODO: confirm sending a request
     this.trees = toRaw(data[0].trees);
     return;
@@ -196,7 +210,7 @@ export const store = reactive({
     }
     //retrieve insterted task in order to get its database id
     this.tasks.push({ ...data[0], executions: execution });
-    if (task.type === "UNTIL_DONE" || task.type === "REGULAR" || dayjs(date).isSame(dayjs(this.currentDisplayDate),'day'))
+    if (task.type === "UNTIL_DONE" || task.type === "REGULAR" || dayjs(date).isSame(dayjs(this.currentDisplayDate), 'day'))
       this.currentDateTasks.push({ ...data[0], executions: execution[0] });
 
     //update callendar singleTasks list

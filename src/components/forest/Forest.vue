@@ -1,6 +1,10 @@
 <template>
   <div class="cont">
     <!-- <h1 style="margin: 10px; color:#529955">//forest:</h1> -->
+     <FormButton class="button" @click="toggleTimer" style="margin-bottom: 40px;">
+              start timer
+    </FormButton>   
+
     <div class="forest">
     <!-- <div class="shadow">test</div>       -->
       <Tree v-for="n in 25" v-bind:displayTree="trees.includes(n)" v-bind:xPosition="(n - 1) % 5"
@@ -15,11 +19,13 @@
 <script>
 import Tree from './Tree.vue';
 import { store } from '@/store/store';
+import FormButton from "@/components/user_interface/FormButton.vue";
 
 export default {
   name: "Forest",
   components: {
-    Tree
+    Tree,
+    FormButton,
   },
   data(){
     return {
@@ -29,6 +35,11 @@ export default {
   computed:{
     trees(){
       return store.trees;
+    }
+  },
+  methods:{
+    toggleTimer(){
+      store.emitter.emit("showTimer", { a: "test" });
     }
   }
 
