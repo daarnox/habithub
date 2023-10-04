@@ -36,7 +36,7 @@ export default {
   created() {
     const user = supabase.auth.getUser()
     supabase.auth.onAuthStateChange((_, session) => {
-      store.setUser(session);
+      store.setSession(session);
       //console.log(store.user)
       this.userLoggedIn = (store.user != null);
     });

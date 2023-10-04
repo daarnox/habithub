@@ -51,12 +51,12 @@ export const store = reactive({
       user_id, trees, date`)
       .eq('user_id', this.user.id)
       .eq('date', date);
-    // console.log(data[0])
+
     if(data[0] == null){
-      console.log("przeszlo" + date)
+
       const { data, error } = await supabase.from('forests')
       .insert({ user_id: this.user.id, trees: [], date: date}).select();
-      console.log(error)
+      if(error != null ) console.log(error.message)
       this.trees = toRaw(data[0].trees);
     } else {
       this.trees = toRaw(data[0].trees);
@@ -66,7 +66,6 @@ export const store = reactive({
   async addRandomTree() {
 
     const date = dayjs(this.todaysDate).startOf('day').add(0, 'day').toISOString();
-
     // console.log(typeof(this.trees))
     const trees_copy = toRaw(this.trees);
     // console.log(trees_copy)
@@ -92,7 +91,7 @@ export const store = reactive({
     this.trees = toRaw(data[0].trees);
     return;
   },
-  setUser(session) {
+  setSession(session) {
     this.user = session ? session.user : null;
     //TODO: set current date here???? or maybe better just delete line below
 
@@ -103,7 +102,30 @@ export const store = reactive({
       this.retrieveCurrentCalendarData();
       this.getUserData();
       this.getTreeData();
+
+      this.emitter.on("toggleTask", (data) => {
+
+        this.delayToggleTaskCompletion(data.task, data.currentDate );
+        // console.log(data.task)    ///?????????????????????????????????
+        // console.log(data.currDate)
+      });
     }
+  },
+  delayToggleTaskCompletion(task, date){
+
+    const cancelEventName = "cancel" + task.name + date;
+
+    let sendRequest = true;
+    // this.emitter.emit("cancelToggleTask" + task.name, "test");
+
+    this.emitter.on(cancelEventName, (data) => {
+      sendRequest = false;
+    });
+
+    setTimeout(()=>{
+      if(sendRequest) this.toggleTaskCompletion(task,date)
+    },2000)
+
   },
   retreiveDate(displayDateOffset = 0) {
     //get todays date according to timezone

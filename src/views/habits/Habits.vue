@@ -31,7 +31,7 @@
           <h1 style="margin: 10px; color:var(--mainColor)">//todo:</h1>
           <div class="task-list">
             <ul>
-              <TaskItem v-for="(task, index) in uncompletedTasks" :key="task.id" v-bind:task="task" />
+              <TaskItem v-for="(task, index) in uncompletedTasks" :key="index" v-bind:task="task" />
             </ul>
           </div>
         </div>
@@ -40,7 +40,7 @@
           <h1 style="margin: 10px; color:var(--mainColor)">//done:</h1>
           <div class="task-list">
             <ul>
-              <TaskItem v-for="(task, index) in completedTasks" :key="task.id" v-bind:task="task" />
+              <TaskItem v-for="(task, index) in completedTasks" :key="index" v-bind:task="task" />
             </ul>
           </div>
         </div>

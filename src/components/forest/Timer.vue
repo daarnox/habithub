@@ -32,7 +32,7 @@ export default {
     },
     startTimer() {
 
-      const time = 10000;
+      const time = 5000;
 
       const rating = document.getElementsByClassName("rating")[0];
       rating.innerHTML = " ";
