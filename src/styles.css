@@ -7,11 +7,12 @@
 
 .block {
   position: absolute;
-  width: 2px;
-  height: 15px;
+  width: 1px;
+  /* height: 150px; */
+  height: 125px;
   background: var(--mainColor);
   left: 50%;
-  transform-origin: 50% 150px;
+  transform-origin: 50% 222px;    /* half */
   /* transform: rotate(25deg); */
   opacity: 0;
   animation: animate 0.1s linear forwards;

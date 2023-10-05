@@ -11,25 +11,45 @@ export const store = reactive({
 
   //session user
   user: null,
-  //user data
+  //user data like chosen page style, allow updates
   userData: null,
   //all tasks with all executions
   tasks: [],
   //todays date
   todaysDate: null,
-  //used in task list and callendar to retrieve proper data
+  //used in day's tasks to retrieve proper data
   currentDisplayDate: null,
   //list of filtered tasks accoring to currentDisplayDate
   currentDateTasks: [], //TODO: rename to currentDayData
+  //calendar data
+  currentCalendarData: [],
   //used to check if data is ready to be used
   callendarDatesAreSet: false,
-
-  currentCalendarData: [],
-
-  // event emitter
+  // global event emitter
   emitter: mitt(),
-
+  //list of currently displayed forest
   trees: [],
+
+  // retrive all required data once user is logged in
+  setSession(session) {
+    this.user = session ? session.user : null;
+    
+    if (this.user != null && this.currentDisplayDate == null) {
+      this.retreiveDate();
+      //habits page
+      this.retrieveCurrentDayData();
+      // callendar page
+      this.retrieveCurrentCalendarData();
+      this.getUserData();
+      // forest
+      this.getTreeData();
+
+      // handling TaskItem event
+      this.emitter.on("toggleTask", (data) => {
+        this.delayToggleTaskCompletion(data.task, data.currentDate );
+      });
+    }
+  },
 
   async getUserData() {
     const { data, error } = await supabase.from('users').select(`
@@ -90,26 +110,6 @@ export const store = reactive({
     //TODO: confirm sending a request
     this.trees = toRaw(data[0].trees);
     return;
-  },
-  setSession(session) {
-    this.user = session ? session.user : null;
-    //TODO: set current date here???? or maybe better just delete line below
-
-    if (this.user != null && this.currentDisplayDate == null) {
-      this.retreiveDate();
-      this.retrieveCurrentDayData();
-      //this.retrieveCallendarData();
-      this.retrieveCurrentCalendarData();
-      this.getUserData();
-      this.getTreeData();
-
-      this.emitter.on("toggleTask", (data) => {
-
-        this.delayToggleTaskCompletion(data.task, data.currentDate );
-        // console.log(data.task)    ///?????????????????????????????????
-        // console.log(data.currDate)
-      });
-    }
   },
   delayToggleTaskCompletion(task, date){
 

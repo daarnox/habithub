@@ -15,6 +15,7 @@
     "json": "^11.0.0",
     "json-server": "^0.17.3",
     "mitt": "^3.0.1",
+    "mosha-vue-toastify": "^1.0.23",
     "server": "^1.0.38",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3"
