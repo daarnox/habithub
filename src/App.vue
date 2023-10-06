@@ -64,12 +64,6 @@ export default {
       }
     },
 
-    //   r.style.setProperty('--mainColor', '#9cdcfe');
-    //   r.style.setProperty('--mainDarkColor', '#1e2c33');        
-    // } else {
-    //   r.style.setProperty('--mainColor', '#529955');
-    //   r.style.setProperty('--mainDarkColor', '#182e19');
-
   }
 }
 </script>

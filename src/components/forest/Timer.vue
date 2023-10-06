@@ -75,6 +75,8 @@ export default {
 
 
     showNotification() {
+
+      const toastColor = getComputedStyle(document.body).getPropertyValue('--mainColor');
       createToast(
         {
           title: "Time is up",
@@ -82,13 +84,13 @@ export default {
         },
         {
           timeout: 5000,
-          toastBackgroundColor: "#529955",
+          toastBackgroundColor: toastColor,
           hideProgressBar: true,
         }
       );
     },
     
-  },
+  }, 
   created() {},
   mounted() {
     store.emitter.on("showTimer", (a) => {

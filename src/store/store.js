@@ -7,6 +7,10 @@ import mitt from "mitt";
 
 import { isProxy, toRaw } from 'vue';
 
+import { createToast } from "mosha-vue-toastify";
+import "mosha-vue-toastify/dist/style.css";
+
+
 export const store = reactive({
 
   //session user
@@ -135,7 +139,8 @@ export const store = reactive({
     this.currentDisplayDate = dayjs(this.todaysDate).startOf('day').add(displayDateOffset, 'day').toISOString();
   },
   //TODO: better comments
-  processDayData(data) {
+  processDayData(data, date) {
+    if (date == null) date = this.currentDisplayDate;
     return data.filter(task => {
       if (task.executions != null) {
         //TODO: multiple executions error handling
@@ -147,11 +152,7 @@ export const store = reactive({
       else if (task.type === "UNTIL_DONE") return (task.keep_on || task.executions)
       else if (task.type === "ON_DATE") return task.executions
       else if (task.type === "UNTIL_DATE") {
-        if (task.executions) {
-          //TODO send update?
-          task.keep_on == false;
-          return true;
-        } else return task.keep_on;
+        return (task.keep_on && !dayjs(date).isAfter(dayjs(task.policies.date_to, 'YYYY-MM-DD'), 'day')) || task.executions;
       }
       else {
         console.log("Unvalid task type"); //TODO: better error handling
@@ -166,7 +167,8 @@ export const store = reactive({
     //get tasks and executions data
     const { data, error } = await supabase.from('tasks').select(`
       id, name, description, completed, type, keep_on,
-      executions(id, created_at, is_done, task_date, task_id)`)
+      executions(id, created_at, is_done, task_date, task_id),
+      policies(task_id, date_from, date_to, keep_on)`)
       .eq('user_id', this.user.id)
       .eq('executions.task_date', this.currentDisplayDate);
     if (error != null) {
@@ -187,7 +189,8 @@ export const store = reactive({
     //get tasks and executions data
     const { data, error } = await supabase.from('tasks').select(`
       id, name, description, completed, type, keep_on,
-      executions(id, created_at, is_done, task_date, task_id)
+      executions(id, created_at, is_done, task_date, task_id),
+      policies(task_id, date_from, date_to, keep_on)
       `).eq('user_id', this.user.id)
       .filter('executions.task_date', 'gte', previousWeekMonday)
       .filter('executions.task_date', 'lte', nextWeekSunday);
@@ -206,7 +209,7 @@ export const store = reactive({
           });
           return task_copy;
         });
-        temp = this.processDayData(temp);
+        temp = this.processDayData(temp, date);
         this.currentCalendarData.push({ date: date, tasks: temp });  //TODO: organize differently
       }
       this.callendarDatesAreSet = true;
@@ -221,7 +224,8 @@ export const store = reactive({
     const new_task = data[0];
     //if task is irregular add by default todays execution to it
     let execution = [];
-    if (task.type === "ON_DATE" || task.type === "UNTIL_DATE") {
+    // if (task.type === "ON_DATE" || task.type === "UNTIL_DATE") {
+    if (task.type === "ON_DATE") {
       const temp_date = date ? date : this.currentDisplayDate;
       const { data, error } = await supabase
         .from('executions')
@@ -229,6 +233,15 @@ export const store = reactive({
       //console.log(data[0]);
       if (error != null) console.log(error.message);
       else execution.push(data[0]);
+    }
+    // create policy for UNTIL_DATE type
+    if (task.type === "UNTIL_DATE"){
+      const temp_date = date ? date : this.currentDisplayDate;
+      const { data, error } = await supabase
+        .from('policies')
+        .insert({ task_id: new_task.id, keep_on: true, date_to: temp_date }).select();
+      //console.log(data[0]);
+      if (error != null) this.showErrorNotification(error.message)
     }
     //retrieve insterted task in order to get its database id
     this.tasks.push({ ...data[0], executions: execution });
@@ -240,9 +253,8 @@ export const store = reactive({
   },
   async toggleTaskCompletion(task, currentDate) {
     // TODO try catch block??
-    console.log(task)
 
-    if (task.type == "UNTIL_DONE") {
+    if (task.type == "UNTIL_DONE" || task.type == "UNTIL_DATE") {
       const { error } = await supabase
         .from('tasks')
         .update({ keep_on: !task.keep_on })
@@ -252,11 +264,11 @@ export const store = reactive({
     }
     //either delete it or update execution depending on the task's type
     if (task.executions != null) {
-      if (task.type === "REGULAR" || task.type === "UNTIL_DONE") {
+      if (task.type === "REGULAR" || task.type === "UNTIL_DONE" || task.type === "UNTIL_DATE" ) {
         const { error2 } = await supabase.from('executions').delete().eq('id', task.executions.id);
         if (error2 != null) console.log(error2.message);
         task.executions = null;
-      } else {
+      } else {  // TODO: XDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD delete this whole if else
         const { data, error2 } = await supabase
           .from('executions')
           .update({ is_done: !task.executions.is_done, task_date: currentDate })
@@ -279,9 +291,24 @@ export const store = reactive({
     this.currentDateTasks = this.currentDateTasks.filter(t => t.id != task.id);
     // TODO: try catch blocks
     const { error } = await supabase.from('tasks').delete().eq('id', task.id);
-    if (error != null) console.log(error.message);
+      if (error != null) this.showErrorNotification(error.message)
     //update callendar singleTasks list
     this.retrieveCurrentCalendarData();
+  },
+
+  showErrorNotification(message) {
+
+    createToast(
+      {
+        title: "An error has occured",
+        description: message,
+      },
+      {
+        timeout: 7000,
+        toastBackgroundColor: "#aa0000",
+        hideProgressBar: true,
+      }
+    );
   },
 
 })
