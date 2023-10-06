@@ -105,7 +105,7 @@ export const store = reactive({
       .eq('user_id', store.user.id)     
       .eq ('date', date).select();
 
-      if (error != null) console.log(error2.message);
+      if (error != null) console.log(error.message);
       // console.log("???????")
     //TODO: confirm sending a request
     this.trees = toRaw(data[0].trees);
@@ -240,12 +240,15 @@ export const store = reactive({
   },
   async toggleTaskCompletion(task, currentDate) {
     // TODO try catch block??
+    console.log(task)
+
     if (task.type == "UNTIL_DONE") {
       const { error } = await supabase
         .from('tasks')
         .update({ keep_on: !task.keep_on })
         .eq('id', task.id)
       if (error != null) console.log(error.message);
+      task.keep_on = !task.keep_on; // TODO: why is this line necessary
     }
     //either delete it or update execution depending on the task's type
     if (task.executions != null) {

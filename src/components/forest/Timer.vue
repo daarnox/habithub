@@ -83,7 +83,7 @@ export default {
         {
           timeout: 5000,
           toastBackgroundColor: "#529955",
-          hideProgressBar: "true",
+          hideProgressBar: true,
         }
       );
     },
