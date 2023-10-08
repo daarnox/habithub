@@ -69,10 +69,14 @@ export default {
         singleTasksList() {
             let result = [];
             this.day.tasks.forEach((task) => {
-                if (task.type === "ON_DATE" || task.type === "UNTIL_DATE") {
+
+                if (task.type === "ON_DATE") {
                     if (task.executions !== undefined)
                         result.push(task.name);
+                } else if (task.type === "UNTIL_DATE") {
+                    result.push(task.name)
                 }
+
             })
             return result;
         },
