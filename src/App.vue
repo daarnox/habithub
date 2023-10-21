@@ -4,6 +4,7 @@
   <div v-else>
     <Navigation />
     <Timer/>
+    <PageStyleManager/>
     <router-view />
   </div>
 </template>
@@ -16,6 +17,7 @@ import { supabase } from './supabase'
 import { store } from '@/store/store'
 
 import Timer from "@/components/forest/Timer.vue";
+import PageStyleManager from "@/components/PageStyleManager.vue";
 
 import '@/styles.css';
 
@@ -25,6 +27,7 @@ export default {
   components: {
     Navigation,
     Authentication,
+    PageStyleManager,
     Timer
   },
   data() {
@@ -42,11 +45,11 @@ export default {
     });
   },
   computed: {
-    changeClass() {
-      if (store.userData != null) {
-        return store.userData.chosen_style;
-      } else return false;
-    }
+    // changeClass() {
+    //   if (store.userData != null) {
+    //     return store.userData.chosen_style;
+    //   } else return false;
+    // }
   },
   methods: {
     // simulateLoggingIn(){
@@ -54,15 +57,15 @@ export default {
     // }
   },
   watch: {
-    changeClass(newChangeClass, oldChangeClass) {
-      if (newChangeClass) {
-        document.body.style.setProperty('--mainColor', '#9cdcfe');
-        document.body.style.setProperty('--mainDarkColor', '#1e2c33');
-      } else {
-        document.body.style.setProperty('--mainColor', '#529955');
-        document.body.style.setProperty('--mainDarkColor', '#182e19');
-      }
-    },
+    // changeClass(newChangeClass, oldChangeClass) {
+    //   if (newChangeClass) {
+    //     document.body.style.setProperty('--mainColor', '#9cdcfe');
+    //     document.body.style.setProperty('--mainDarkColor', '#1e2c33');
+    //   } else {
+    //     document.body.style.setProperty('--mainColor', '#529955');
+    //     document.body.style.setProperty('--mainDarkColor', '#182e19');
+    //   }
+    // },
 
   }
 }

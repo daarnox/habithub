@@ -116,8 +116,8 @@ export default {
   border-color: var(--mainColor);
   border-style: solid;
   box-shadow:
-    /* -5px -5px 5px rgba(255, 0, 191, 0.5), */ -5px -5px 5px rgba(35, 227, 254, 0.3),
-    /* 5px 5px 5px rgb(0, 0, 0, 0.2), */ inset -5px -5px 5px
+    /* -5px -5px 5px rgba(255, 0, 191, 0.5), */ -7px -7px 7px rgba(35, 227, 254, 0.3),
+    /* 5px 5px 5px rgb(0, 0, 0, 0.2), */ inset -10px -10px 10px
       rgba(35, 227, 254, 0.2);
   /* inset 5px 5px 5px rgb(0, 0, 0, 0.2);  */
 }

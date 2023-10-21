@@ -14,19 +14,18 @@
         <div class="part" style="float: left">
           <h1 style="margin: 10px; color: var(--mainColor)">//options:</h1>
           <div class="cont">
+            <!-- allow past updates checkbox -->
             <div style="display: flex; align-items: center">
               <label for="allowUpdates" style="padding: 20px">
-                allow every day updates</label
-              >
+                allow every day updates</label>
               <input
                 type="checkbox"
                 id="allowUpdates"
                 @click="toggleAllowUpdates"
                 :checked="allowUpdates"
               />
-
-              <!-- <p v-if="store.allowUpdates">test</p> -->
             </div>
+            <!-- toggle page style temporary checkbox -->
             <div style="display: flex; align-items: center">
               <label for="chosenStyle" style="padding: 20px">
                 toggle page style</label
@@ -38,7 +37,11 @@
                 :checked="chosenStyle"
               />
             </div>
-            <!-- temporary toggle timer button -->
+            <!-- style switcher -->
+            <PageStyleSwitcher/>
+
+
+
           </div>
         </div>
         <div class="part" style="float: right">
@@ -58,6 +61,7 @@ import { store } from "@/store/store";
 import Forest from "@/components/forest/Forest.vue";
 import Timer from "@/components/forest/Timer.vue";
 import FormButton from "@/components/user_interface/FormButton.vue";
+import PageStyleSwitcher from "@/components/PageStyleSwitcher.vue";
 
 export default {
   name: "HomeView",
@@ -65,6 +69,7 @@ export default {
     Forest,
     Timer,
     FormButton,
+    PageStyleSwitcher
   },
   data() {
     return {
@@ -108,20 +113,8 @@ export default {
       //TODO: confirm sending a request
       store.userData = data[0];
 
-      // var r = document.querySelector(':root');
-      // if (store.userData.chosen_style) {
-      //   r.style.setProperty('--mainColor', '#9cdcfe');
-      //   r.style.setProperty('--mainDarkColor', '#1e2c33');
-      // } else {
-      //   r.style.setProperty('--mainColor', '#529955');
-      //   r.style.setProperty('--mainDarkColor', '#182e19');
-      // }
     },
-    // toggleTimer() {
-    //   // this.showTimer = !this.showTimer;
-    //   // const emitter = mitt();
-    //   store.emitter.emit("showTimer", { a: "test" });
-    // },
+
   },
   mounted() {
 

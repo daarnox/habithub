@@ -31,7 +31,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: #fff;
+  /* color: #fff; */
+  color: #23e3feaa;
   font-size: 2.5em;
   font-weight: 500;
   text-align: center;

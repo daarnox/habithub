@@ -1,47 +1,47 @@
 <template>
     <!-- <div class="tree" style="--x:{{xPosition}} --y:2"> -->
     <div class="tree" :style="cssProps">
-        <div v-if="displayTree" class="top" style="--j:0">
-            <span style="--i:0;"></span>
-            <span style="--i:1;"></span>
-            <span style="--i:2;"></span>
-            <span style="--i:3;"></span>
+        <div v-if="displayTree" class="top" style="--j:0;">
+            <span style="--i:0;" :style="colors.treeTop"></span>
+            <span style="--i:1;" :style="colors.treeTop"></span>
+            <span style="--i:2;" :style="colors.treeTop"></span>
+            <span style="--i:3;" :style="colors.treeTop"></span>
         </div>
         <div v-if="displayTree" class="top" style="--j:1">
-            <span style="--i:0;"></span>
-            <span style="--i:1;"></span>
-            <span style="--i:2;"></span>
-            <span style="--i:3;"></span>
+            <span style="--i:0;" :style="colors.treeTop"></span>
+            <span style="--i:1;" :style="colors.treeTop"></span>
+            <span style="--i:2;" :style="colors.treeTop"></span>
+            <span style="--i:3;" :style="colors.treeTop"></span>
         </div>
         <div v-if="displayTree" class="top" style="--j:2">
-            <span style="--i:0;"></span>
-            <span style="--i:1;"></span>
-            <span style="--i:2;"></span>
-            <span style="--i:3;"></span>
+            <span style="--i:0;" :style="colors.treeTop"></span>
+            <span style="--i:1;" :style="colors.treeTop"></span>
+            <span style="--i:2;" :style="colors.treeTop"></span>
+            <span style="--i:3;" :style="colors.treeTop"></span>
         </div>
         <div v-if="displayTree" class="bottom" style="--j:3">
-            <span style="--i:0;"></span>
-            <span style="--i:1;"></span>
-            <span style="--i:2;"></span>
-            <span style="--i:3;"></span>
+            <span style="--i:0;" :style="colors.treeBottom"></span>
+            <span style="--i:1;" :style="colors.treeBottom"></span>
+            <span style="--i:2;" :style="colors.treeBottom"></span>
+            <span style="--i:3;" :style="colors.treeBottom"></span>
         </div>
 
         <div class="dirt">
             <div class="grass">
                 <!-- <span style="overflow-wrap: break-word; font-size:8px; color:#1f1206; font-weight: bold;">Lorem ipsum dolor situm amet etsum, consectetur adipiscing</span> -->
-                <span></span>
+                <span :style="colors.dirtGrass"></span>
             </div>
             <div class="middle">
-                <span style="--i:0;"></span>
-                <span style="--i:1;"></span>
-                <span style="--i:2;"></span>
-                <span style="--i:3;"></span>
+                <span style="--i:0;" :style="colors.dirtMiddle"></span>
+                <span style="--i:1;" :style="colors.dirtMiddle"></span>
+                <span style="--i:2;" :style="colors.dirtMiddle"></span>
+                <span style="--i:3;" :style="colors.dirtMiddle"></span>
                 <!-- <span style="--i:0; color:#529955">//////</span>
                 <span style="--i:1; color:#529955">//////</span>
                 <span style="--i:2; color:#529955">//////</span>
                 <span style="--i:3; color:#529955">//////</span> -->
             </div>
-         <span class="shadow"></span>           
+            <span class="shadow" :style="colors.shadow"></span>
         </div>
 
     </div>
@@ -56,11 +56,59 @@ export default {
         "displayTree": Boolean,
         "xPosition": Number,
         "yPosition": Number,
+        "displayStyle": String
     },
     computed: {
         cssProps() {
             return "--x:" + this.xPosition + ";--y:" + this.yPosition;
         },
+        colors() {
+            // its used only when we need a separate static styled looking tree
+
+            // treeTop     background: linear-gradient(90deg, var(--treeColor), var(--treeDarkColor));
+            // treeBottom     background: linear-gradient(90deg, var(--dirtBottomColor), var(--dirtBottomDarkColor));
+            // shadow     background: var(--mainDarkColor);
+            //dirtMiddle     background: linear-gradient(90deg, var(--dirtBottomColor), var(--dirtBottomDarkColor));    border-top: 15px solid var(--dirtDarkColor);
+            //background: linear-gradient(90deg, var(--dirtColor), var(--dirtDarkColor));
+
+
+            if (this.displayStyle === "cyber") {
+                return {
+                    "treeTop": "background: linear-gradient(90deg, #11dcfe, #f34554);",
+                    "treeBottom": "background: linear-gradient(90deg, #8a262e, #212121);",
+                    "shadow": " background: #112c33;",
+                    "dirtMiddle": "background: linear-gradient(90deg, #8a262e, #212121); border-top: 15px solid #212121;",
+                    "dirtGrass": "background: linear-gradient(90deg, #0a8f9b, #212121);",
+
+                    "tree": "background: #11dcfe ",
+                    "treeDark": "background: #f34554",
+                    "dirt": "background: #0a8f9b",
+                    "dirtDark": "background: #212121",
+                    "dirtBottom": "background: #8a262e",
+                    "dirtBottomDark": "background: #212121"
+                }
+            }
+
+            else return {
+                "treeTop": "",
+                "treeBottom": "",
+                "shadow": "",
+                "dirtMiddle": "",
+                "background": "",
+            };
+            // return var(--treeColor);
+            // return {
+            //     colors: {
+            //     "" : var(--treeColor),
+            //     "" : var(--treeDarkColor),
+            //     "" : var(--dirtColor),
+            //     "" : var(--dirtDarkColor),
+            //     "" : var(--dirtBottomColor),
+            //     "" : var(--dirtBottomDarkColor)
+            //     }
+            // }
+
+        }
     }
 }
 </script>
@@ -98,7 +146,7 @@ export default {
     width: 100%;
     height: 100%;
     /* background: linear-gradient(90deg, #529955, #182e19); */
-    background: linear-gradient(90deg, #529955, #29522b);
+    background: linear-gradient(90deg, var(--treeColor), var(--treeDarkColor));
     clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
     transform-origin: bottom;
     border-bottom: 10px solid #00000019;
@@ -123,7 +171,7 @@ export default {
     width: 20%;
     /* 20% */
     height: 100%;
-    background: linear-gradient(90deg, #442404, #1f1206);
+    background: linear-gradient(90deg, var(--dirtBottomColor), var(--dirtBottomDarkColor));
     clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
     transform-origin: bottom;
     border-bottom: 10px solid #00000055;
@@ -174,10 +222,10 @@ export default {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, #442404, #1f1206);
+    background: linear-gradient(90deg, var(--dirtBottomColor), var(--dirtBottomDarkColor));
     /* //clip-path: polygon(50% 0%, 0% 100%, 100% 100%); */
     transform-origin: bottom;
-    border-top: 15px solid #315e31;
+    border-top: 15px solid var(--dirtDarkColor);
     /* 1/5 height*/
     transform: rotateY(calc(90deg * var(--i))) translateZ(25px);
     /* 1/2 height */
@@ -190,7 +238,7 @@ export default {
     left: 0px;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, #396839, #427e42);
+    background: linear-gradient(90deg, var(--dirtColor), var(--dirtDarkColor));
     /* //clip-path: polygon(50% 0%, 0% 100%, 100% 100%); */
     transform-origin: bottom;
     transform: rotatex(90deg) translateY(25px) translateZ(50px);
