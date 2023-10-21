@@ -89,7 +89,7 @@ export default {
   min-height: 100vh;
   /* position: relative; */
   /* background: linear-gradient(45deg, #212f45 20%, #1b3a4b 20% 40%, #212f45 40% 60%, #272640 60% 80%, #312244 80%); */
-  background: linear-gradient(45deg, var(--mainDarkColor) 20%, #202020 20% 80%, var(--mainDarkColor) 80%);
+  background: linear-gradient(45deg, var(--mainDarkColor) 20%, var(--background2) 20% 80%, var(--mainDarkColor) 80%);
   /* animation: mymove 5s infinite alternate; */
 }
 
@@ -104,7 +104,7 @@ export default {
   margin: auto;
   height: 88vh;
   width: 95vw;
-  background-color: #1e1e1e;
+  background-color: var(--background1);
   box-sizing: border-box;
   display: flex;
   justify-content: center;

@@ -140,7 +140,7 @@ export default {
   margin: auto;
   height: 88vh;
   width: 95vw;
-  background-color: #1e1e1e;
+  background-color: var(--background1);
   box-sizing: border-box;
   display: flex;
   justify-content: center;
@@ -150,7 +150,7 @@ export default {
 .container {
   width: 100%;
   height: 100%;
-  background-color: #252525;
+  background-color: var(--background3);
   display: flex;
   flex-direction: column;
   /* justify-content: space-evenly; */
@@ -199,8 +199,8 @@ export default {
   border-radius: 50px;
   min-width: 50px;
   height: 50px;
-  border: 5px solid #202020;
-  background-color: #1e1e1e;
+  border: 5px solid var(--background2);
+  background-color: var(--background1);
   outline: none;
   display: flex;
   align-items: center;

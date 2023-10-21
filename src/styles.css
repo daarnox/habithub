@@ -3,6 +3,10 @@
   --mainDarkColor: #182e19;
   /* --mainColor: #9cdcfe;
     --mainDarkColor: #1e2c33; */
+    --background1: "#1e1e1e";
+    --background2: "#202020";
+    --background3: "#252525";
+    --background4: "#2b2b2b";
 }
 
 .block {

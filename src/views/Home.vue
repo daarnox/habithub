@@ -25,22 +25,8 @@
                 :checked="allowUpdates"
               />
             </div>
-            <!-- toggle page style temporary checkbox -->
-            <div style="display: flex; align-items: center">
-              <label for="chosenStyle" style="padding: 20px">
-                toggle page style</label
-              ><br />
-              <input
-                type="checkbox"
-                id="chosenStyle"
-                @click="changeCssStyle"
-                :checked="chosenStyle"
-              />
-            </div>
             <!-- style switcher -->
             <PageStyleSwitcher/>
-
-
 
           </div>
         </div>
@@ -90,30 +76,9 @@ export default {
         return store.userData.allow_updates;
       }
     },
-    chosenStyle() {
-      if (store.userData != null) return store.userData.chosen_style;
-    },
   },
   methods: {
-    async toggleAllowUpdates() {
-      const { data, error } = await supabase
-        .from("users")
-        .update({ allow_updates: !store.userData.allow_updates })
-        .eq("id", store.user.id)
-        .select();
-      //TODO: confirm sending a request
-      store.userData = data[0];
-    },
-    async changeCssStyle() {
-      const { data, error } = await supabase
-        .from("users")
-        .update({ chosen_style: !store.userData.chosen_style })
-        .eq("id", store.user.id)
-        .select();
-      //TODO: confirm sending a request
-      store.userData = data[0];
 
-    },
 
   },
   mounted() {
@@ -127,7 +92,7 @@ export default {
 .container {
   width: 100%;
   height: 100%;
-  background-color: #252525;
+  background-color: var(--background3);
   display: flex;
   flex-direction: column;
   /* justify-content: space-evenly; */
@@ -150,7 +115,7 @@ border-style: solid; */
 .part {
   float: left;
   width: 48%;
-  background-color: #1e1e1e;
+  background-color: var(--background1);
   margin: 1%;
   height: 90%;
   border-radius: 40px;
@@ -158,7 +123,7 @@ border-style: solid; */
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-color: #2b2b2b;
+  border-color: var(--background4);
   border-style: solid;
   /* position: relative; */
 }
@@ -168,7 +133,7 @@ input[type="checkbox"] {
   width: 60px;
   height: 30px;
   -webkit-appearance: none;
-  background: #252525;
+  background: var(--background3);
   outline: none;
   border-radius: 20px;
   box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
@@ -176,7 +141,7 @@ input[type="checkbox"] {
 }
 
 input[type="checkbox"]:checked {
-  background: #2b2b2b;
+  background: var(--background4);
 }
 
 input[type="checkbox"]:before {

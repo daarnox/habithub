@@ -69,7 +69,7 @@ export default {
 .calendar {
     width: 100%;
     height: 100%;
-    background-color: #252525;
+    background-color: var(--background3);
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;

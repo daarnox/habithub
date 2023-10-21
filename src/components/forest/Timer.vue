@@ -1,5 +1,5 @@
 <template>
-  <div v-show="displayTimer" class="backdrop" @click.self="closeTimer">
+  <div v-show="displayTimer" class="backdrop">
     <!-- <div v-show="true" class="backdrop" @click.self="closeTimer"> -->
     <div class="clock">
       <div class="card">

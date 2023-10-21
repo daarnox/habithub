@@ -165,17 +165,17 @@ export default {
 
 .today-border {
     border-color: white;
-    background-color: #2b2b2b;
+    background-color: var(--background4);
 }
 
 .past-border {
-    background-color: #2b2b2b;
-    border-color: #1e1e1e;
+    background-color: var(--background4);
+    border-color: var(--background1);
 }
 
 .default-border {
-    border-color: #1e1e1e;
-    background-color: #202020;
+    border-color: var(--background1);
+    background-color: var(--background2);
 }
 
 .day-frame {
@@ -190,7 +190,7 @@ export default {
 }
 
 .day-frame:hover {
-    background-color: #1e1e1e;
+    background-color: var(--background1);
     border-color: var(--mainColor);
     /* border: solid 
     border-width: 2px 2px 2px 2px; */

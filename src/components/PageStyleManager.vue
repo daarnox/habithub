@@ -1,50 +1,89 @@
 <template></template>
 
 <script>
-import { store } from '@/store/store'
+import { store } from "@/store/store";
 
 export default {
-    name: "PageStyleManager",
-    components: {
+  name: "PageStyleManager",
+  components: {},
+  data() {
+    return {
+      store,
+      styles: {
+        vscode: {
+          "--mainColor": "#529955",
+          "--mainDarkColor": "#182e19",
+          "--treeColor": "#29522b",
+          "--treeDarkColor": "#529955",
+          "--dirtColor": "#427e42",
+          "--dirtDarkColor": "#396839",
+          "--treeBottomColor": "#442404",
+          "--treeBottomDarkColor": "#1f1206",
+          "--dirtBottomColor": "#442404",
+          "--dirtBottomDarkColor": "#1f1206",
+          "--treeBorderColor": "none",
 
-    },
-    data() {
-        return {
-            store,
-            colorNames: ["--mainColor", "--mainDarkColor", "--treeColor", "--treeDarkColor", "--dirtColor", "--dirtDarkColor", "--dirtBottomColor", "--dirtBottomDarkColor"],
-            styles: {
-                "vscode": ["#529955", "#182e19", "#29522b", "#529955", "#427e42", "#396839", "#442404", "#1f1206"],
-                "vscode": ["#0f0", "#0f0", "#0f0", "#0f0", "#0f0", "#0f0", "#0f0", "#0f0"],
-                "cyberpunk": ["#f34554", "#112c33", "#11dcfe", "#f34554", "#0a8f9b", "#212121", "#8a262e", "#212121"],
-            },
-
-        };
-    },
-    computed: {
-        changeClass() {
-            if (store.userData != null) {
-                return store.userData.chosen_style;
-            } else return false;
-        }
-    },
-    watch: {
-        changeClass(newChangeClass, oldChangeClass) {
-            if (newChangeClass) {
-                for (let i = 0; i < this.colorNames.length; i++) {
-                    document.body.style.setProperty(this.colorNames[i], this.styles["cyberpunk"][i]);
-                }
-            } else {
-                for (let i = 0; i < this.colorNames.length; i++) {
-                    document.body.style.setProperty(this.colorNames[i], this.styles["vscode"][i]);
-                }
-            }
+          "--background1": "#1e1e1e",
+          "--background2": "#202020",
+          "--background3": "#252525",
+          "--background4": "#2b2b2b",
         },
+        cyber: {
+          "--mainColor": "#f34554",
+          "--mainDarkColor": "#112c33",
+          "--treeColor": "#11dcfe",
+          "--treeDarkColor": "#f34554",
+          "--dirtColor": "#0a8f9b",
+          "--dirtDarkColor": "#212121",
+          "--dirtBottomColor": "#8a262e",
+          "--dirtBottomDarkColor": "#212121",
+          "--treeBottomColor": "#8a262e",
+          "--treeBottomDarkColor": "#212121",
+          "--treeBorderColor": "none",
+
+          "--background1": "#1e1e1e",
+          "--background2": "#202020",
+          "--background3": "#252525",
+          "--background4": "#2b2b2b",
+        },
+        matrix: {
+          "--mainColor": "#0f0",
+          "--mainDarkColor": "#000",
+          "--treeColor": "#0f0",
+          "--treeDarkColor": "#000",
+          "--dirtColor": "#000",
+          "--dirtDarkColor": "#000",
+          "--treeBottomColor": "#0f0",
+          "--treeBottomDarkColor": "#000",
+          "--dirtBottomColor": "#000",
+          "--dirtBottomDarkColor": "#000",
+          "--treeBorderColor": "3px solid #0f0",
+
+          "--background1": "#020",
+          "--background2": "#000",
+          "--background3": "#000",
+          "--background4": "#0a0",
+        },
+      },
+    };
+  },
+  computed: {
+    changeClass() {
+      if (store.userData != null) {
+        return store.userData.chosen_style;
+      } else return "none";
     },
-    created() {
+  },
+  watch: {
+    changeClass(newChangeClass, oldChangeClass) {
+      if (!(newChangeClass in this.styles)) newChangeClass = "vscode";
 
-
-
-    }
+      for (let key in this.styles[newChangeClass]) {
+        document.body.style.setProperty(key, this.styles[newChangeClass][key]);
+      }
+    },
+  },
+  created() {},
 };
 </script>
 

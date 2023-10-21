@@ -33,7 +33,7 @@ header {
 
 nav {
     width: 95%;
-    background-color: #252525;
+    background-color: var(--background3);
     padding-top: 15px;
     position: relative;
     display: flex;
@@ -41,7 +41,7 @@ nav {
     margin: 0 auto;
     /* border-image: linear-gradient(to right, #006466,#4d194d) 1; */
     border-bottom: 2px solid transparent;
-    border-image: linear-gradient(to right, var(--mainColor), #1e1e1e) 1;
+    border-image: linear-gradient(to right, var(--mainColor), var(--background1)) 1;
 }
 
 .title {
@@ -72,7 +72,7 @@ nav {
     text-align: center;
     font-size: 20px;
     padding: 20px;
-    background-color: #2b2b2b;
+    background-color: var(--background2);
 }
 
 .link:hover {
@@ -80,7 +80,7 @@ nav {
 }
 
 li a.router-link-exact-active {
-    background-color: #1e1e1e;
+    background-color: var(--background1);
     color: #fff;
 }
 </style>
