@@ -1,26 +1,32 @@
 :root {
   --mainColor: #529955;
   --mainDarkColor: #182e19;
-  /* --mainColor: #9cdcfe;
-    --mainDarkColor: #1e2c33; */
-    --background1: "#1e1e1e";
-    --background2: "#202020";
-    --background3: "#252525";
-    --background4: "#2b2b2b";
+
+  --treeColor: #29522b;
+  --treeDarkColor: #529955;
+  --dirtColor: #427e42;
+  --dirtDarkColor: #396839;
+  --treeBottomColor: #442404;
+  --treeBottomDarkColor: #1f1206;
+  --dirtBottomColor: #442404;
+  --dirtBottomDarkColor: #1f1206;
+  --treeBorderColor: none;
+
+  --background1: #1e1e1e;
+  --background2: #202020;
+  --background3: #252525;
+  --background4: #2b2b2b;
 }
 
 .block {
   position: absolute;
   width: 1px;
-  /* height: 150px; */
   height: 125px;
   background: var(--mainColor);
   left: 50%;
-  transform-origin: 50% 222px;    /* half */
-  /* transform: rotate(25deg); */
+  transform-origin: 50% 222px;
   opacity: 0;
   animation: animate 0.1s linear forwards;
-
   box-shadow: 0 0 15px var(--mainColor), 0 0 30px var(--mainColor);
 }
 
@@ -30,12 +36,11 @@
   }
 }
 
-.test {
+.curr-time {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  /* color: #fff; */
   color: #23e3feaa;
   font-size: 2.5em;
   font-weight: 500;

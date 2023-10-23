@@ -30,7 +30,7 @@ export default {
         },
         cyber: {
           "--mainColor": "#f34554",
-          "--mainDarkColor": "#112c33",
+          "--mainDarkColor": "#0a1a1f",
           "--treeColor": "#11dcfe",
           "--treeDarkColor": "#f34554",
           "--dirtColor": "#0a8f9b",
@@ -43,8 +43,8 @@ export default {
 
           "--background1": "#1e1e1e",
           "--background2": "#202020",
-          "--background3": "#252525",
-          "--background4": "#2b2b2b",
+          "--background3": "#112c33",
+          "--background4": "#8a272f",
         },
         matrix: {
           "--mainColor": "#0f0",
@@ -69,21 +69,24 @@ export default {
   },
   computed: {
     changeClass() {
-      if (store.userData != null) {
-        return store.userData.chosen_style;
+      if (store.chosenStyle != null) {
+        return store.chosenStyle;
       } else return "none";
     },
   },
   watch: {
     changeClass(newChangeClass, oldChangeClass) {
-      if (!(newChangeClass in this.styles)) newChangeClass = "vscode";
+      if (!(newChangeClass in this.styles)) newChangeClass = "cyber";
 
       for (let key in this.styles[newChangeClass]) {
         document.body.style.setProperty(key, this.styles[newChangeClass][key]);
       }
     },
   },
-  created() {},
+  created() {
+    const chosenStyle = localStorage.getItem('chosenStyle');
+    store.chosenStyle = (chosenStyle != null) ? chosenStyle : "cyber";
+  },
 };
 </script>
 

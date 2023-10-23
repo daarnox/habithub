@@ -33,6 +33,8 @@ export const store = reactive({
   emitter: mitt(),
   //list of currently displayed forest
   trees: [],
+  // chosen style from localStorage
+  chosenStyle: null,
 
   // retrive all required data once user is logged in
   setSession(session) {

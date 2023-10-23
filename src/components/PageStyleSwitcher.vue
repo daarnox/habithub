@@ -1,57 +1,28 @@
 <template>
   <p>choose your favourite page style:</p>
 
-  <div
-    style="
+  <div style="
       position: relative;
       display: flex;
       height: 50%;
       min-height: 250px;
       width: 60%;
-    "
-  >
-    <div
-      class="card"
-      v-bind:class="{ 'card-checked': checkedOption === 'cyber' }"
-      @click="changePageStyle('cyber')"
-    >
+    ">
+    <div class="card" v-bind:class="{ 'card-checked': checkedOption === 'cyber' }" @click="changePageStyle('cyber')">
       <div style="position: relative">
-        <Tree
-          v-bind:displayTree="true"
-          v-bind:xPosition="-1"
-          v-bind:yPosition="0"
-          v-bind:displayStyle="'cyber'"
-        />
+        <Tree v-bind:displayTree="true" v-bind:xPosition="-1" v-bind:yPosition="0" v-bind:displayStyle="'cyber'" />
       </div>
     </div>
 
-    <div
-      class="card"
-      v-bind:class="{ 'card-checked': checkedOption === 'vscode' }"
-      @click="changePageStyle('vscode')"
-    >
+    <div class="card" v-bind:class="{ 'card-checked': checkedOption === 'vscode' }" @click="changePageStyle('vscode')">
       <div style="position: relative">
-        <Tree
-          v-bind:displayTree="true"
-          v-bind:xPosition="-1"
-          v-bind:yPosition="0"
-          v-bind:displayStyle="'vscode'"
-        />
+        <Tree v-bind:displayTree="true" v-bind:xPosition="-1" v-bind:yPosition="0" v-bind:displayStyle="'vscode'" />
       </div>
     </div>
 
-    <div
-      class="card"
-      v-bind:class="{ 'card-checked': checkedOption === 'matrix' }"
-      @click="changePageStyle('matrix')"
-    >
+    <div class="card" v-bind:class="{ 'card-checked': checkedOption === 'matrix' }" @click="changePageStyle('matrix')">
       <div style="position: relative">
-        <Tree
-          v-bind:displayTree="true"
-          v-bind:xPosition="-1"
-          v-bind:yPosition="0"
-          v-bind:displayStyle="'matrix'"
-        />
+        <Tree v-bind:displayTree="true" v-bind:xPosition="-1" v-bind:yPosition="0" v-bind:displayStyle="'matrix'" />
       </div>
     </div>
   </div>
@@ -75,28 +46,22 @@ export default {
   },
   methods: {
     async changePageStyle(name) {
+      // const { data, error } = await supabase
+      //   .from("users")
+      //   .update({ chosen_style: name })
+      //   .eq("id", store.user.id)
+      //   .select();
+      // store.userData = data[0]; 
       this.checkedOption = name;
-      const { data, error } = await supabase
-        .from("users")
-        .update({ chosen_style: name })
-        .eq("id", store.user.id)
-        .select();
-      //TODO: confirm sending a request
-      store.userData = data[0];
+      if (name === "cyber") localStorage.removeItem('chosenStyle');
+      else localStorage.setItem('chosenStyle', name);
+      store.chosenStyle = name;
     },
   },
-  computed: {
-    changeClass() {
-      if (store.userData != null) {
-        return store.userData.chosen_style;
-      } else return "none";
-    },
-  },
-  watch: {
-    changeClass(newChangeClass, oldChangeClass) {
-      this.checkedOption = newChangeClass;
-    },
-  },
+  created() {
+    const chosenStyle = localStorage.getItem('chosenStyle');
+    this.checkedOption = (chosenStyle != null) ? chosenStyle : "cyber";
+  }
 };
 </script>
 
@@ -109,6 +74,7 @@ export default {
   margin: 10px;
   border: solid 1px #00000000;
 }
+
 .card:hover {
   border: solid 1px var(--mainColor);
 }
