@@ -76,11 +76,11 @@ nav {
 }
 
 .link:hover {
-    color: white;
+    color: var(--mainTextColor);
 }
 
 li a.router-link-exact-active {
     background-color: var(--background1);
-    color: #fff;
+    color: var(--mainTextColor);
 }
 </style>

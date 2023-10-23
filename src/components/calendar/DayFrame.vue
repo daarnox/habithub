@@ -164,12 +164,12 @@ export default {
 }
 
 .today-border {
-    border-color: white;
+    border-color: var(--mainTextColor);
     background-color: var(--background4);
 }
 
 .past-border {
-    background-color: var(--background4);
+    background-color: var(--pastDayBackground);
     border-color: var(--background1);
 }
 

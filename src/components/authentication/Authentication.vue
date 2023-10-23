@@ -64,20 +64,20 @@ export default {
   padding: 10px;
   min-width: 100px;
   font-family: Consolas;
-  background-color: #1e1e1e;
-  color: white;
+  background-color: var(--background1);
+  color: var(--mainTextColor);
   border-style: none;
   /* border-top-left-radius: 25px;
   border-top-right-radius: 25px; */
 }
 .active-tab{
-  background-color: #252525;
+  background-color: var(--background3);
 }
 
 .form-container {
   height:350px;
   width:100%;
-  background-color: #252525;
+  background-color: var(--background3);
   /* border-color: #fff;
   border-style: solid; */
   border-bottom-left-radius: 25px;
@@ -89,9 +89,9 @@ export default {
   width: 600px;
   height: 600px;
   padding: 50px;
-  background: #1e1e1e;
+  background: var(--background1);
   border-radius: 50%;
-  color: white;
+  color: var(--mainTextColor);
   display: flex;
   align-items: center;
   justify-content: space-evenly;

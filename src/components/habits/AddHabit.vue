@@ -76,9 +76,9 @@ export default {
     width: 450px;
     height: 450px;
     padding: 50px;
-    background: #1e1e1e;
+    background: var(--background1);
     border-radius: 50%;
-    color: white;
+    color: var(--mainTextColor);
     display: flex;
     align-items: center;
     justify-content: space-evenly;
@@ -121,10 +121,10 @@ export default {
   font-weight: 700;
   text-align: center;
   padding: 16px 14px 18px;
-  color: #fff;
+  color: var(--mainTextColor);
   /* box-shadow: inset 0 0 0 2px #fff; */
   /* background-color: transparent; */
-  background-color: #2b2b2b;
+  background-color: var(--background2);
   /* background-color: #1e1e1e; */
   height: 48px;
   box-shadow:
@@ -147,10 +147,10 @@ export default {
   font-weight: 700;
   text-align: center;
   padding: 16px 14px 18px;
-  color: #fff;
+  color: var(--mainTextColor);
   /* box-shadow: inset 0 0 0 2px #fff; */
   /* background-color: transparent; */
-  background-color: #2b2b2b;
+  background-color: var(--background2);
   /* background-color: #1e1e1e; */
   height: 48px;
   box-shadow:

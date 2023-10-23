@@ -23,7 +23,7 @@ export default {
     return {
       displayTimer: false,
       counterCurrentTime: 0,
-      timerDuration: 15
+      timerDuration: 5
     };
   },
   components: {
@@ -117,7 +117,7 @@ export default {
   width: 450px;
   height: 450px;
   /* padding: 50px; */
-  background: #1e1e1e;
+  background: var(--timerBackground);
   border-radius: 50%;
   color: white;
   display: flex;
@@ -182,7 +182,7 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: #23e3feaa;
+  color: var(--timerCounter);
   font-size: 2.5em;
   font-weight: 500;
   text-align: center;

@@ -83,10 +83,10 @@ export default {
   font-weight: 700;
   text-align: center;
   padding: 16px 14px 18px;
-  color: #fff;
+  color: var(--mainTextColor);;
   /* box-shadow: inset 0 0 0 2px #fff; */
   /* background-color: transparent; */
-  background-color: #1e1e1e;
+  background-color: var(--background1);
   /* background-color: #1e1e1e; */
   height: 48px;
   box-shadow:

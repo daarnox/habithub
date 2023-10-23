@@ -1,29 +1,16 @@
 <template>
   <li :class="{ 'toggle-completion': isBeingToggled }">
-    <button
-      :disabled="disableToggle"
-      @click.self="toggleTaskCompletion()"
-      :class="{ 'task-important': isImportant, 'task-completed': isCompleted }"
-    >
+    <button :disabled="disableToggle" @click.self="toggleTaskCompletion()"
+      :class="{ 'task-important': isImportant, 'task-completed': isCompleted }">
       <!-- <span style="color:#dcdcaa">{{task.name}}</span>
         <span style="color:#c586c0">(</span>
         <span style="color:#9cdcfe">{{task.details}}</span>
         <span style="color:#c586c0">)</span> -->
 
-      <span v-if="isCompleted" style="text-decoration: none">//</span
-      >{{ task.name }} ({{ task.description }})
+      <span v-if="isCompleted" style="text-decoration: none">//</span>{{ task.name }} ({{ task.description }})
     </button>
-    <Icon
-      v-if="!isBeingToggled"
-      icon="iconamoon:trash-duotone"
-      @click="removeTask()"
-      class="trash"
-    />
-    <Icon
-      v-if="isBeingToggled"
-      icon="icon-park-outline:back-one"
-      @click="cancelToggle()"
-    />
+    <Icon v-if="!isBeingToggled" icon="iconamoon:trash-duotone" @click="removeTask()" class="trash" />
+    <Icon v-if="isBeingToggled" icon="icon-park-outline:back-one" @click="cancelToggle()" />
   </li>
 </template>
   
@@ -42,7 +29,7 @@ export default {
     };
   },
   props: ["task"],
-  async mounted() {},
+  async mounted() { },
   computed: {
     isCompleted() {
       if (this.task.executions == null) return false;
@@ -121,7 +108,7 @@ li::after {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #1e1e1e;
+  background-color: var(--background1);
   z-index: -2;
 }
 
@@ -132,7 +119,7 @@ li::before {
   left: 0;
   width: 0%;
   height: 100%;
-  background-color: #2b2b2b;
+  background-color: var(--taskCompletion);
   transition: all 2s;
   z-index: -1;
 }
@@ -152,7 +139,7 @@ button {
   padding: 10px;
   background: none;
   border: none;
-  color: white;
+  color: var(--mainTextColor);
   font-size: 20px;
   font-family: Consolas;
   border-radius: 35px;
@@ -172,6 +159,7 @@ button:hover {
 .task-important {
   color: red;
 }
+
 .task-completed {
   text-decoration: line-through;
   color: var(--mainColor);

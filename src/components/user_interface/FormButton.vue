@@ -30,8 +30,8 @@ export default {
   border-radius: 50px;
   min-width: 50px;
   height: 50px;
-  border: 5px solid #202020;
-  background-color: #1e1e1e;
+  border: 5px solid var(--buttonBorder);
+  background-color: var(--background1);
   outline: none;
   display: flex;
   align-items: center;
@@ -41,7 +41,7 @@ export default {
   text-align: center;
   font-family: consolas;
   margin: 5px;
-  color: #fff;
+  color: var(--mainTextColor);
   font-size: 14px;
   padding: 25px;
 }
@@ -54,5 +54,6 @@ export default {
     inset -5px -5px 5px rgba(70, 70, 70, 0.1),
     inset 5px 5px 5px rgb(0, 0, 0, 0.2); 
   color: var(--mainColor);
+  border: 5px solid var(--buttonBorderHover);
 }
 </style>

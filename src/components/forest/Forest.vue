@@ -3,24 +3,18 @@
     <!-- <h1 style="margin: 10px; color:#529955">//forest:</h1> -->
 
     <div style="display:flex; align-items:center; justify-content: center; margin-bottom: 40px; width: 100%;">
-      <h2 style="color: var(--mainColor); font-size: 30px; margin-right: 30px;"> <Icon icon="bi:tree"/>{{ trees.length }}</h2> 
-      <FormButton
-        class="button"
-        @click="toggleTimer"
-      >
+      <h2 style="color: var(--mainColor); font-size: 30px; margin-right: 30px;">
+        <Icon icon="bi:tree" />{{ trees.length }}
+      </h2>
+      <FormButton @click="toggleTimer">
         start timer
       </FormButton>
     </div>
 
     <div class="forest">
       <!-- <div class="shadow">test</div>       -->
-      <Tree
-        v-for="n in 25"
-        v-bind:displayTree="trees.includes(n)"
-        v-bind:xPosition="(n - 1) % 5"
-        v-bind:yPosition="Math.floor((n - 1) / 5)"
-        v-bind:key="n"
-      ></Tree>
+      <Tree v-for="n in 25" v-bind:displayTree="trees.includes(n)" v-bind:xPosition="(n - 1) % 5"
+        v-bind:yPosition="Math.floor((n - 1) / 5)" v-bind:key="n"></Tree>
     </div>
   </div>
 </template>
