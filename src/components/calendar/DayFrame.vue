@@ -71,7 +71,7 @@ export default {
             this.day.tasks.forEach((task) => {
 
                 if (task.type === "ON_DATE") {
-                    if (task.executions !== undefined)
+                    // if (task.executions !== undefined)
                         result.push(task.name);
                 } else if (task.type === "UNTIL_DATE") {
                     result.push(task.name)
@@ -93,8 +93,8 @@ export default {
                     doneTasks++;
                 }
                 if (task.type === "ON_DATE") {
+                        totalTasks++;                    
                     if (task.executions !== undefined) {
-                        totalTasks++;
                         if (task.executions.is_done) doneTasks++;
                     }
                 }

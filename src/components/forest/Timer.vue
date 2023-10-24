@@ -23,7 +23,7 @@ export default {
     return {
       displayTimer: false,
       counterCurrentTime: 0,
-      timerDuration: 5
+      timerDuration: 15
     };
   },
   components: {

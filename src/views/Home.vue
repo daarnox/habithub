@@ -78,8 +78,9 @@ export default {
     },
   },
   methods: {
-
-
+    toggleAllowUpdates(){
+      store.userData.allow_updates = !store.userData.allow_updates;
+    }
   },
   mounted() {
 

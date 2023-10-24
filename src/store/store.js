@@ -158,7 +158,7 @@ export const store = reactive({
       //decide whether task should be added based on its type
       if (task.type === "REGULAR") return true
       else if (task.type === "UNTIL_DONE") return (task.keep_on || task.executions)
-      else if (task.type === "ON_DATE") return task.executions
+      else if (task.type === "ON_DATE") return dayjs(date).isSame(dayjs(task.policies.date_to, 'YYYY-MM-DD'), 'day') || task.executions;
       else if (task.type === "UNTIL_DATE") {
         return (task.keep_on && !dayjs(date).isAfter(dayjs(task.policies.date_to, 'YYYY-MM-DD'), 'day')) || task.executions;
       }
@@ -234,19 +234,9 @@ export const store = reactive({
         .insert({ name: task.name, description: task.description, completed: task.completed, user_id: this.user.id, type: task.type }).select();
       if (error) throw error;
       const new_task = data[0];
-      //if task is irregular add by default todays execution to it
-      let execution = [];
-      // if (task.type === "ON_DATE" || task.type === "UNTIL_DATE") {
-      if (task.type === "ON_DATE") {
-        const temp_date = date ? date : this.currentDisplayDate;
-        const { data, error } = await supabase
-          .from('executions')
-          .insert({ task_id: new_task.id, is_done: false, task_date: temp_date }).select();
-        if (error) throw error;
-        execution.push(data[0]);
-      }
+
       // create policy for UNTIL_DATE type
-      if (task.type === "UNTIL_DATE") {
+      if (task.type === "UNTIL_DATE" || task.type === "ON_DATE") {
         const temp_date = date ? date : this.currentDisplayDate;
         const { data, error } = await supabase
           .from('policies')
@@ -254,9 +244,9 @@ export const store = reactive({
         if (error) throw error;
       }
       //TODO: delete global tasks list?
-      this.tasks.push({ ...data[0], executions: execution });
+      this.tasks.push({ ...data[0] });
       if (task.type === "UNTIL_DONE" || task.type === "REGULAR" || dayjs(date).isSame(dayjs(this.currentDisplayDate), 'day'))
-        this.currentDateTasks.push({ ...data[0], executions: execution[0] });
+        this.currentDateTasks.push({ ...data[0] });
     } catch (error) {
       this.showErrorNotification(error.message);
     } finally {
@@ -276,18 +266,9 @@ export const store = reactive({
       }
       //update execution depending on the task's type or create new one
       if (task.executions != null) {
-        if (task.type === "REGULAR" || task.type === "UNTIL_DONE" || task.type === "UNTIL_DATE") {
-          const { error } = await supabase.from('executions').delete().eq('id', task.executions.id);
-          if (error) throw error;
-          task.executions = null;
-        } else {  // TODO: rewrite this whole ifelse
-          const { data, error } = await supabase
-            .from('executions')
-            .update({ is_done: !task.executions.is_done, task_date: currentDate })
-            .eq('id', task.executions.id).select();
-          if (error) throw error;
-          task.executions = data[0];
-        }
+        const { error } = await supabase.from('executions').delete().eq('id', task.executions.id);
+        if (error) throw error;
+        task.executions = null;
       } else {
         const { data, error } = await supabase
           .from('executions')
